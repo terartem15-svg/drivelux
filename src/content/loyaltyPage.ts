@@ -152,6 +152,7 @@ export const LOYALTY_PAGE = localized(
     ctaTitle: 'Начните копить привилегии сегодня',
     ctaText: 'Регистрация занимает минуту, а первая скидка ждёт уже на третьей поездке.',
     ctaFleet: 'Выбрать автомобиль',
+    photoCredit: 'Фото салона:',
   },
   {
     title: 'Loyalty programme',
@@ -285,5 +286,6 @@ export const LOYALTY_PAGE = localized(
     ctaTitle: 'Start collecting privileges today',
     ctaText: 'Signing up takes a minute, and your first discount is waiting on your third trip.',
     ctaFleet: 'Choose a car',
+    photoCredit: 'Cabin photo:',
   },
 )

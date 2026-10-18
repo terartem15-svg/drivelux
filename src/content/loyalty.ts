@@ -8,8 +8,8 @@ import { ROUTES } from './site'
 // с какой поездки какая скидка, что ещё даёт каждый уровень.
 //
 // Сайт — концепт: программа, скидки и условия демонстрационные, и страница
-// так и подписывает их. image — фото салона (центральная консоль BMW в
-// тёплой коже); без фото баннер рисует заглушку
+// так и подписывает их. image — фото салона (центральная консоль в тёплой
+// коже); без фото баннер рисует заглушку
 export type PerkIcon = 'discount' | 'fast' | 'manager' | 'exclusive'
 export type TierId = 'silver' | 'gold' | 'platinum'
 
@@ -26,6 +26,11 @@ export const TIERS: LoyaltyTier[] = [
 ]
 
 export const LOYALTY_IMAGE: string | undefined = salonImage
+
+// Автор фото салона — подпись внизу страницы /loyalty. Лицензия Pexels
+// подписи не требует, но авторов подписываем, как у остальных фото сайта.
+// Кадр — вырезка из исходного снимка, уменьшенная и чуть затемнённая
+export const LOYALTY_IMAGE_CREDIT = { author: 'Ammy K', url: 'https://www.pexels.com/photo/10316823/' }
 
 // --- Баннер на главной -----------------------------------------------------------------
 export const LOYALTY = localized(

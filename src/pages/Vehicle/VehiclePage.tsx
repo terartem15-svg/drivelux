@@ -92,6 +92,7 @@ const TEXT = localized(
     interior: (name: string) => `Салон ${name}`,
     photo: 'Фото',
     publicDomain: 'общественное достояние',
+    modified: 'изменено',
     terms: 'Условия аренды',
     demo: 'Демонстрационные условия: сайт — концепт для портфолио, цифры приведены для примера',
     extrasLabel: 'Что включено и дополнительные опции',
@@ -127,6 +128,7 @@ const TEXT = localized(
     interior: (name: string) => `${name} interior`,
     photo: 'Photo',
     publicDomain: 'public domain',
+    modified: 'modified',
     terms: 'Rental terms',
     demo: 'Demonstration terms: this is a portfolio concept site, the figures are examples',
     extrasLabel: 'What is included and extras',
@@ -337,6 +339,8 @@ function VehicleDetails({ vehicle }: { vehicle: Vehicle }) {
                 {interior.credit.author}
               </a>
               , Wikimedia Commons, {interior.credit.license === 'public domain' ? text.publicDomain : interior.credit.license}
+              {/* CC BY и CC BY-SA требуют отметить изменения: кадр уменьшен, местами обрезан */}
+              {interior.credit.license.startsWith('CC BY') && `, ${text.modified}`}
             </figcaption>
           </figure>
         )}

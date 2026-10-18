@@ -13,7 +13,10 @@ import styles from './VehiclePage.module.css'
 // скринридер скажет «Фото 2 из 4» при смене кадра.
 //
 // Здесь фото — содержание, а не украшение: у каждого описательный alt.
-// Под фото — автор снимка со ссылкой (для фото из Unsplash)
+// Под фото — автор снимка со ссылкой и источник. У фото из Wikimedia Commons
+// ещё и лицензия, а у лицензий CC BY и CC BY-SA — пометка «изменено»: эти
+// лицензии требуют её, а кадры для сайта обрезаны до 3:2 и уменьшены
+// (CC0 и фото Unsplash/Pexels такой пометки не требуют)
 const TEXT = localized(
   {
     gallery: 'галерея',
@@ -25,6 +28,7 @@ const TEXT = localized(
     of: 'из',
     thumb: (index: number, count: number) => `Фото ${index} из ${count}`,
     credit: 'Фото',
+    modified: 'изменено',
   },
   {
     gallery: 'gallery',
@@ -36,6 +40,7 @@ const TEXT = localized(
     of: 'of',
     thumb: (index: number, count: number) => `Photo ${index} of ${count}`,
     credit: 'Photo',
+    modified: 'modified',
   },
 )
 
@@ -183,6 +188,7 @@ export function Gallery({ photos, name, badge }: GalleryProps) {
               <a href={credit.license.url} target="_blank" rel="noreferrer">
                 {credit.license.name}
               </a>
+              {credit.license.name.startsWith('CC BY') && `, ${text.modified}`}
             </>
           )}
         </p>

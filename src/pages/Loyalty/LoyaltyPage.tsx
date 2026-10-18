@@ -5,7 +5,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs/Breadcrumbs'
 import { Button } from '@/components/Button/Button'
 import { Logo } from '@/components/Logo/Logo'
 import { BRAND_OPTIONS, UNITS } from '@/content/fleet'
-import { LOYALTY_IMAGE, TIERS, type TierId } from '@/content/loyalty'
+import { LOYALTY_IMAGE, LOYALTY_IMAGE_CREDIT, TIERS, type TierId } from '@/content/loyalty'
 import { LOYALTY_PAGE } from '@/content/loyaltyPage'
 import { ROUTES } from '@/content/site'
 import { BRAND_NAMES, getVehicle, VEHICLES } from '@/content/vehicles'
@@ -282,6 +282,17 @@ export function LoyaltyPage() {
           </div>
         </div>
       </section>
+
+      {/* --- Автор фото салона с первого экрана (и баннера на главной) ------------------- */}
+      {LOYALTY_IMAGE && (
+        <p className={`container ${styles.credit}`}>
+          {text.photoCredit}{' '}
+          <a href={LOYALTY_IMAGE_CREDIT.url} target="_blank" rel="noreferrer">
+            {LOYALTY_IMAGE_CREDIT.author}
+          </a>
+          , Pexels
+        </p>
+      )}
     </div>
   )
 }
