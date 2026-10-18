@@ -28,7 +28,8 @@ export const PLACES: Place[] = [
     kind: 'office',
     label: { ru: 'Офис DriveLux — Москва-Сити', en: 'DriveLux office — Moscow City' },
     short: { ru: 'Москва-Сити, офис', en: 'Moscow City office' },
-    note: { ru: 'Пресненская наб., 12 · 08:00–22:00', en: '12 Presnenskaya Emb. · 08:00–22:00' },
+    // Демо-сайт: настоящего адреса у офиса нет (см. CONTACTS в site.ts)
+    note: { ru: 'Демо, адрес не указан · 08:00–22:00', en: 'Demo, no real address · 08:00–22:00' },
     fee: 0,
   },
   {
