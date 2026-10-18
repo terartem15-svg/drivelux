@@ -1,0 +1,300 @@
+/* --- Автомобиль под настроение ----------------------------------------------------- */
+.section {
+  padding-top: var(--section-space);
+}
+
+.note {
+  max-width: 19rem;
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--c-text-muted);
+  text-wrap: pretty;
+}
+
+/* --- Мозаика ------------------------------------------------------------------------
+   Слева высокая «Спорт» на две строки, справа сверху две карточки, под ними
+   широкая «Для особого случая». Первая колонка шире — главная категория
+   проката крупнее остальных */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, clamp(15rem, 20vw, 19rem));
+  grid-template-areas:
+    'sport business suv'
+    'sport special special';
+  gap: clamp(0.75rem, 1.2vw, 1.25rem);
+}
+
+.sport {
+  grid-area: sport;
+}
+
+.business {
+  grid-area: business;
+}
+
+.suv {
+  grid-area: suv;
+}
+
+.special {
+  grid-area: special;
+}
+
+/* --- Карточка -----------------------------------------------------------------------
+   Фото на всю карточку, текст — внизу слева на затемнении, число машин —
+   в левом верхнем углу, стрелка — в правом нижнем */
+.card {
+  --card-pad: clamp(1.125rem, 1.9vw, 1.875rem);
+
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  padding: var(--card-pad);
+  overflow: hidden;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background-color: var(--c-surface);
+  transition: border-color 260ms var(--ease-soft);
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transition: scale 700ms var(--ease-out);
+}
+
+.photo,
+.placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Точка фокуса и тон приходят из content/moods.ts переменными: --focus —
+   для всех раскладок, --focus-tall — для высокой карточки (ниже, в
+   медиазапросе), --tone — приглушение светлого снимка */
+.photo {
+  object-fit: cover;
+  object-position: var(--focus, 50% 50%);
+  filter: var(--tone, none);
+}
+
+/* Затемнение снизу — под текстом, чтобы он читался на любом фото; сверху —
+   лёгкая тень под плашкой с числом машин: у светлых снимков там небо */
+.media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgb(2 7 11 / 0.4) 0%, transparent 30%),
+    linear-gradient(0deg, rgb(2 7 11 / 0.92) 0%, rgb(2 7 11 / 0.5) 38%, transparent 68%);
+}
+
+.text {
+  max-width: 25rem;
+  padding-right: 3.75rem;
+}
+
+.title {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--c-text);
+}
+
+/* Главная категория — заголовок крупнее: карточка больше остальных */
+.sport .title {
+  font-size: clamp(1.375rem, 2vw, 2rem);
+}
+
+.description {
+  margin-top: 0.4rem;
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--c-text-soft);
+  text-wrap: pretty;
+}
+
+/* Плашка с числом машин — тёмное стекло, как плашка слайда в первом экране */
+.count {
+  position: absolute;
+  top: var(--card-pad);
+  left: var(--card-pad);
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  background-color: rgb(2 7 11 / 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--c-text);
+}
+
+.arrow {
+  position: absolute;
+  right: var(--card-pad);
+  bottom: var(--card-pad);
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgb(255 255 255 / 0.3);
+  border-radius: var(--radius-full);
+  color: var(--c-text);
+  transition:
+    background-color 260ms var(--ease-soft),
+    border-color 260ms var(--ease-soft),
+    color 260ms var(--ease-soft);
+}
+
+/* Наведение: кант карточки и стрелка золотеют, фото чуть приближается —
+   приближение только если человек не отключал анимации */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 45%, transparent);
+  }
+
+  .card:hover .arrow {
+    border-color: transparent;
+    background: var(--gold-gradient);
+    color: var(--c-on-gold);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card:hover .media {
+    scale: 1.04;
+  }
+}
+
+/* --- Заглушки вместо фото ------------------------------------------------------------
+   У каждой категории своё настроение из одних градиентов — ни одного файла.
+   Уйдут, как только у категории появится image */
+
+/* Спорт: ночная трасса — красное зарево стоп-сигналов, тёплый свет фар
+   и две полосы огней, смазанные скоростью: красные ниже, светлые выше */
+.sport .placeholder {
+  background:
+    radial-gradient(60% 20% at 62% 74%, rgb(230 70 40 / 0.34), transparent 70%),
+    radial-gradient(40% 16% at 28% 66%, rgb(255 190 120 / 0.14), transparent 70%),
+    radial-gradient(55% 40% at 24% 24%, rgb(46 66 96 / 0.3), transparent 70%),
+    linear-gradient(170deg, #0b0f15 0%, #07090d 56%, #130807 100%);
+}
+
+.sport .placeholder::before,
+.sport .placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  filter: blur(0.6px);
+  mask-composite: intersect;
+}
+
+.sport .placeholder::before {
+  background: repeating-linear-gradient(
+    176deg,
+    transparent 0 0.9rem,
+    rgb(255 110 70 / 0.34) 0.9rem calc(0.9rem + 1.5px),
+    transparent calc(0.9rem + 1.5px) 2.1rem
+  );
+  mask-image:
+    linear-gradient(180deg, transparent 58%, #000 66%, #000 78%, transparent 88%),
+    linear-gradient(90deg, transparent 0%, #000 40%, #000 92%, transparent 100%);
+}
+
+.sport .placeholder::after {
+  background: repeating-linear-gradient(
+    178deg,
+    transparent 0 1.4rem,
+    rgb(255 225 180 / 0.22) 1.4rem calc(1.4rem + 1px),
+    transparent calc(1.4rem + 1px) 2.6rem
+  );
+  mask-image:
+    linear-gradient(180deg, transparent 46%, #000 54%, #000 62%, transparent 68%),
+    linear-gradient(90deg, transparent 10%, #000 50%, transparent 100%);
+}
+
+/* Бизнес: стеклянный фасад делового квартала — холодный свет, сетка
+   колонн и перекрытий */
+.business .placeholder {
+  background:
+    radial-gradient(45% 60% at 80% 22%, rgb(120 150 190 / 0.24), transparent 70%),
+    radial-gradient(35% 22% at 28% 82%, rgb(216 182 132 / 0.08), transparent 70%),
+    linear-gradient(180deg, #0a1018 0%, #06090d 100%);
+}
+
+.business .placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 2.25rem, rgb(170 195 230 / 0.1) 2.25rem calc(2.25rem + 1px)),
+    repeating-linear-gradient(180deg, transparent 0 1.5rem, rgb(170 195 230 / 0.05) 1.5rem calc(1.5rem + 1px));
+  mask-image: radial-gradient(55% 70% at 80% 26%, #000 20%, transparent 75%);
+}
+
+/* Внедорожники: закат над холмами — янтарная полоса горизонта и два
+   тёмных силуэта холмов, наложенные друг на друга */
+.suv .placeholder {
+  background:
+    radial-gradient(120% 60% at 22% 122%, #05070a 55%, transparent 55.5%),
+    radial-gradient(110% 52% at 88% 128%, #080a0d 55%, transparent 55.5%),
+    radial-gradient(75% 32% at 58% 64%, rgb(214 140 70 / 0.38), transparent 70%),
+    linear-gradient(180deg, #0a0e14 0%, #1b140c 60%, #0b0a09 100%);
+}
+
+/* Для особого случая: тёплые огоньки гирлянд не в фокусе — круги боке
+   разного размера справа, где не мешают тексту */
+.special .placeholder {
+  background:
+    radial-gradient(circle 1.75rem at 62% 30%, rgb(240 205 150 / 0.2) 70%, transparent 74%),
+    radial-gradient(circle 1.1rem at 71% 54%, rgb(240 205 150 / 0.16) 70%, transparent 74%),
+    radial-gradient(circle 2.5rem at 85% 24%, rgb(240 205 150 / 0.12) 70%, transparent 74%),
+    radial-gradient(circle 0.8rem at 54% 48%, rgb(255 225 180 / 0.26) 70%, transparent 74%),
+    radial-gradient(circle 1.4rem at 93% 60%, rgb(240 205 150 / 0.14) 70%, transparent 74%),
+    radial-gradient(circle 1rem at 78% 76%, rgb(240 205 150 / 0.1) 70%, transparent 74%),
+    radial-gradient(circle 3rem at 44% 16%, rgb(240 205 150 / 0.06) 70%, transparent 74%),
+    radial-gradient(60% 75% at 76% 40%, rgb(201 134 64 / 0.24), transparent 70%),
+    linear-gradient(180deg, #0e0b09 0%, #070605 100%);
+}
+
+/* «Спорт» высокий только в трёхколоночной мозаике — шире 1000px */
+@media (min-width: 1001px) {
+  .sport .photo {
+    object-position: var(--focus-tall, var(--focus, 50% 50%));
+  }
+}
+
+/* --- Адаптив -----------------------------------------------------------------
+   ≤1000px — две колонки: «Спорт» широкой карточкой сверху, под ней пара,
+   внизу снова широкая. ≤600px — одна колонка, карточки пониже */
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(3, clamp(14rem, 36vw, 18rem));
+    grid-template-areas:
+      'sport sport'
+      'business suv'
+      'special special';
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(4, 14.5rem);
+    grid-template-areas:
+      'sport'
+      'business'
+      'suv'
+      'special';
+  }
+}

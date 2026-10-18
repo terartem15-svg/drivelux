@@ -1,0 +1,7 @@
+# Что не загружаем на Vercel — сборка идёт на их стороне из исходников
+node_modules
+dist
+/screenshots
+/PLAN.md
+/.claude/
+*.log

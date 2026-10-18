@@ -1,0 +1,815 @@
+/* --- Программа лояльности ------------------------------------------------------ */
+.page {
+  padding-bottom: var(--space-4);
+}
+
+/* --- Первый экран -----------------------------------------------------------------
+   Слева текст и кнопки, справа — фото салона и поверх него карта участника
+   клуба: золотая, с монограммой, уровнем и именем */
+.hero {
+  padding-top: clamp(1.25rem, 2.4vw, 2rem);
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+}
+
+.title {
+  margin-top: var(--space-4);
+  font-size: clamp(2.1rem, 3.8vw, 3.75rem);
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.titleLine {
+  display: block;
+}
+
+.titleAccent {
+  color: var(--c-gold);
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.lead {
+  max-width: 34rem;
+  margin-top: var(--space-5);
+  font-size: var(--fs-lead);
+  line-height: 1.65;
+  color: var(--c-text-soft);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.member {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  font-size: var(--fs-small);
+  color: var(--c-gold);
+}
+
+.heroVisual {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background-color: var(--c-surface);
+}
+
+.heroPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 55%;
+}
+
+.heroVisual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 30%, rgb(2 7 11 / 0.75) 100%);
+}
+
+/* Карта участника: золото с тёмным текстом, лёгкий наклон и блик */
+.card {
+  position: absolute;
+  z-index: 1;
+  right: 8%;
+  bottom: 9%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: min(22rem, 78%);
+  aspect-ratio: 1.586;
+  padding: clamp(1rem, 2vw, 1.4rem);
+  overflow: hidden;
+  border-radius: 1rem;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgb(255 255 255 / 0.35), transparent 50%),
+    linear-gradient(135deg, #f0d29e 0%, #d2a66a 45%, #a87b42 100%);
+  box-shadow:
+    0 30px 60px -20px rgb(0 0 0 / 0.8),
+    inset 0 1px 0 rgb(255 255 255 / 0.5);
+  color: var(--c-on-gold);
+  rotate: -4deg;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(115deg, transparent 0 22px, rgb(255 255 255 / 0.06) 22px 23px);
+}
+
+.cardTop,
+.cardBottom {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* Логотип на золоте — тёмный: монограмма и подпись перекрашены */
+.card :global(.logo-tagline) {
+  color: rgb(22 17 10 / 0.6);
+}
+
+.card svg path {
+  stroke: #16110a;
+}
+
+.card .cardTop span {
+  color: inherit;
+}
+
+.cardTier {
+  padding: 0.2rem 0.6rem;
+  border: 1px solid rgb(22 17 10 / 0.35);
+  border-radius: var(--radius-full);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.cardChip {
+  position: relative;
+  width: 2.6rem;
+  height: 2rem;
+  border-radius: 0.4rem;
+  background: linear-gradient(135deg, #fbe6bd, #c49456);
+  box-shadow: inset 0 0 0 1px rgb(22 17 10 / 0.25);
+}
+
+.cardBottom {
+  align-items: flex-end;
+}
+
+.cardLabel {
+  display: block;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.cardName {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.cardSince {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+/* --- Цифры -------------------------------------------------------------------------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  border-block: 1px solid var(--c-line);
+}
+
+.stat {
+  display: grid;
+  gap: 0.2rem;
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+}
+
+.stat + .stat {
+  border-left: 1px solid var(--c-line);
+}
+
+.statValue {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--c-gold);
+}
+
+.statLabel {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+/* --- Секции ------------------------------------------------------------------------- */
+.section {
+  padding-top: var(--section-space);
+  scroll-margin-top: var(--space-5);
+}
+
+.sectionHead {
+  max-width: 40rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.sectionEyebrow {
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.sectionTitle {
+  margin-top: var(--space-2);
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+/* --- Шаги ---------------------------------------------------------------------------- */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1.5rem);
+}
+
+.step {
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  background-color: var(--c-surface);
+}
+
+.stepNumber {
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--c-gold) 70%, transparent);
+}
+
+.stepTitle {
+  margin-top: var(--space-4);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+.stepText {
+  margin-top: var(--space-2);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-text-soft);
+}
+
+/* --- Уровни -------------------------------------------------------------------------- */
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  align-items: stretch;
+}
+
+.tier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.25rem, 2.2vw, 2rem);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background-color: var(--c-surface);
+}
+
+/* Gold — главный уровень: золотой кант и тёплая подложка */
+.tier[data-tier='gold'] {
+  border-color: color-mix(in srgb, var(--c-gold) 60%, transparent);
+  background: radial-gradient(90% 70% at 100% 0%, rgb(216 182 132 / 0.14), transparent 70%), var(--c-surface);
+  box-shadow: 0 24px 50px -30px rgb(214 170 110 / 0.5);
+}
+
+.tier[data-tier='platinum'] {
+  background: radial-gradient(90% 70% at 100% 0%, rgb(200 210 225 / 0.08), transparent 70%), var(--c-surface);
+}
+
+.tierBadge {
+  position: absolute;
+  top: -0.75rem;
+  left: clamp(1.25rem, 2.2vw, 2rem);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  background: var(--gold-gradient);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-on-gold);
+}
+
+.tierName {
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.tierFrom {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.tierDiscount {
+  margin-top: var(--space-4);
+  font-size: clamp(2.25rem, 3.4vw, 3rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--c-gold);
+}
+
+.tierOff {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--c-text-soft);
+}
+
+.tierPerks {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--c-line);
+}
+
+.tierPerks li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+}
+
+.tierPerks svg {
+  flex: none;
+  margin-top: 0.15rem;
+  color: var(--c-gold);
+}
+
+/* --- Таблица сравнения ----------------------------------------------------------------- */
+.compare {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.compareTitle {
+  margin-bottom: var(--space-4);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+/* position: relative держит скрытые подписи ячеек («есть», «нет») внутри
+   прокрутки: иначе их точкой отсчёта стала бы страница, и на телефоне они
+   раздували бы её ширину */
+.tableScroll {
+  position: relative;
+  overflow-x: auto;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  background-color: var(--c-surface);
+}
+
+.tableScroll:focus-visible {
+  outline-offset: 2px;
+}
+
+.table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+  font-size: var(--fs-small);
+}
+
+.table th,
+.table td {
+  padding: 0.85rem var(--space-4);
+  border-bottom: 1px solid var(--c-line);
+  text-align: center;
+}
+
+.table tbody tr:last-child th,
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table thead th {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--c-text);
+  background-color: rgb(255 255 255 / 0.02);
+}
+
+.table thead th[data-tier='gold'] {
+  color: var(--c-gold);
+}
+
+.table th[scope='row'],
+.table thead th:first-child {
+  text-align: left;
+  font-weight: 500;
+  color: var(--c-text-soft);
+}
+
+.table td {
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.table td:nth-child(3) {
+  background-color: rgb(216 182 132 / 0.04);
+}
+
+.yes {
+  display: inline-grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: var(--radius-full);
+  background-color: rgb(216 182 132 / 0.14);
+  color: var(--c-gold);
+}
+
+.no {
+  color: var(--c-text-muted);
+}
+
+/* --- Калькулятор ----------------------------------------------------------------------- */
+.calc {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: start;
+  padding: clamp(1.25rem, 2.8vw, 2.5rem);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background: radial-gradient(60% 100% at 100% 100%, rgb(201 134 64 / 0.1), transparent 70%), var(--c-surface);
+}
+
+.calcLead {
+  margin-top: var(--space-3);
+  color: var(--c-text-soft);
+  line-height: 1.6;
+}
+
+.calcForm {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.calcField {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.calcLabel {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.calcDays {
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.selectBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.selectBox select {
+  width: 100%;
+  height: 3rem;
+  padding: 0 2.5rem 0 var(--space-4);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-chip);
+  background-color: var(--c-night);
+  font: inherit;
+  font-size: 1rem;
+  color: var(--c-text);
+  appearance: none;
+  cursor: pointer;
+}
+
+.selectBox select:focus-visible {
+  outline: none;
+  border-color: var(--c-gold);
+}
+
+.selectBox svg {
+  position: absolute;
+  right: 0.9rem;
+  color: var(--c-text-muted);
+  pointer-events: none;
+}
+
+/* Ползунок срока — золотая заполненная часть по переменной --fill */
+.range {
+  width: 100%;
+  height: 1.5rem;
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  cursor: pointer;
+}
+
+.range::-webkit-slider-runnable-track {
+  height: 0.3rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--c-gold) calc(var(--fill) * 100%), rgb(255 255 255 / 0.12) 0);
+}
+
+.range::-moz-range-track {
+  height: 0.3rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--c-gold) calc(var(--fill) * 100%), rgb(255 255 255 / 0.12) 0);
+}
+
+.range::-webkit-slider-thumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: -0.475rem;
+  border: 2px solid var(--c-night);
+  border-radius: var(--radius-full);
+  background: var(--gold-gradient);
+  box-shadow: 0 0 0 1px var(--c-gold);
+  appearance: none;
+}
+
+.range::-moz-range-thumb {
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--c-night);
+  border-radius: var(--radius-full);
+  background: var(--c-gold);
+}
+
+.range:focus-visible {
+  outline-offset: 4px;
+}
+
+.segments {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+}
+
+.segment {
+  height: 2.4rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--c-text-soft);
+  white-space: nowrap;
+  transition:
+    background-color 200ms var(--ease-soft),
+    color 200ms var(--ease-soft);
+}
+
+.segment[aria-pressed='true'] {
+  background: var(--gold-gradient);
+  color: var(--c-on-gold);
+}
+
+.calcResult {
+  overflow: hidden;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  background-color: var(--c-night);
+}
+
+.calcPhoto {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.calcRows {
+  display: grid;
+  padding: var(--space-4) var(--space-4) 0;
+}
+
+.calcRows div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: 0.55rem;
+  border-bottom: 1px solid var(--c-line);
+  font-size: var(--fs-small);
+}
+
+.calcRows dt {
+  color: var(--c-text-muted);
+}
+
+.calcRows dd {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.calcMinus {
+  color: var(--c-gold);
+}
+
+.calcRows .calcTotal {
+  align-items: baseline;
+  border-bottom: 0;
+}
+
+.calcTotal dt {
+  color: var(--c-text);
+}
+
+.calcTotal dd {
+  font-size: 1.5rem;
+  color: var(--c-gold);
+}
+
+.calcSaving {
+  margin: 0 var(--space-4) var(--space-4);
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-chip);
+  background-color: rgb(216 182 132 / 0.1);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-gold);
+  text-align: center;
+}
+
+/* --- Привилегии ------------------------------------------------------------------------ */
+.perks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1.5rem);
+}
+
+.perk {
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  background-color: var(--c-surface);
+}
+
+.perkIcon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid color-mix(in srgb, var(--c-gold) 40%, transparent);
+  border-radius: var(--radius-chip);
+  color: var(--c-gold);
+}
+
+.perkTitle {
+  margin-top: var(--space-4);
+  font-size: var(--fs-ui);
+  font-weight: 600;
+}
+
+.perkText {
+  margin-top: var(--space-2);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-text-soft);
+}
+
+/* --- Вопросы ------------------------------------------------------------------------------ */
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.demo {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--c-text-muted);
+}
+
+.demo svg {
+  flex: none;
+  margin-top: 0.15rem;
+  color: var(--c-gold);
+}
+
+/* --- Призыв ------------------------------------------------------------------------------- */
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border: 1px solid color-mix(in srgb, var(--c-gold) 45%, transparent);
+  border-radius: var(--radius-panel);
+  background: linear-gradient(120deg, rgb(216 182 132 / 0.14), transparent 55%), var(--c-surface);
+}
+
+.ctaTitle {
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.ctaText {
+  margin-top: var(--space-2);
+  color: var(--c-text-soft);
+}
+
+.ctaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* --- Адаптив ----------------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .calc {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .calcIntro {
+    grid-column: 1 / -1;
+  }
+
+  .perks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .heroGrid,
+  .faq {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps,
+  .tiers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tiers {
+    gap: var(--space-6);
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stat:nth-child(3) {
+    border-left: 0;
+  }
+
+  .stat:nth-child(n + 3) {
+    border-top: 1px solid var(--c-line);
+  }
+}
+
+@media (max-width: 640px) {
+  .calc {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .perks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

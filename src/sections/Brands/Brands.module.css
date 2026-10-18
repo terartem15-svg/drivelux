@@ -1,0 +1,137 @@
+/* --- Бренды ------------------------------------------------------------------- */
+.section {
+  padding-top: var(--section-space);
+}
+
+/* --- Бегущая строка ----------------------------------------------------------------
+   Лента во всю ширину экрана, края растворяются маской — логотипы
+   появляются из темноты и уходят в неё. Отступ сверху — от шапки секции */
+.marquee {
+  margin-top: var(--space-2);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+}
+
+/* Две копии списка подряд. Анимация сдвигает ленту от −50% (видна вторая
+   половина) к 0 — то есть вправо — ровно на ширину одной копии и
+   повторяется: стык невидим. Под курсором и при фокусе внутри — пауза */
+.track {
+  display: flex;
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .track {
+    animation: marquee 46s linear infinite;
+  }
+
+  .marquee:hover .track,
+  .marquee:focus-within .track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes marquee {
+  from {
+    translate: -50% 0;
+  }
+
+  to {
+    translate: 0 0;
+  }
+}
+
+/* Без анимации — обычный ряд с прокруткой, вторая копия не нужна */
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .list[aria-hidden] {
+    display: none;
+  }
+}
+
+.list {
+  display: flex;
+  gap: var(--space-3);
+  padding-right: var(--space-3);
+}
+
+/* Ячейка — логотип, название и число машин. Рамка проявляется при
+   наведении и фокусе: в покое лента читается чистой строкой логотипов */
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  width: clamp(8rem, 10vw, 9.5rem);
+  padding: var(--space-4) var(--space-2) var(--space-3);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-card);
+  background-color: rgb(255 255 255 / 0.012);
+  color: rgb(245 247 249 / 0.72);
+  transition:
+    color 220ms var(--ease-soft),
+    border-color 220ms var(--ease-soft),
+    background-color 220ms var(--ease-soft);
+}
+
+.brand:focus-visible {
+  outline-offset: -2px;
+}
+
+/* Квадрат под логотип одинаковый у всех ячеек — подписи стоят на одной линии */
+.logoBox {
+  display: grid;
+  place-items: center;
+  width: clamp(2.25rem, 2.9vw, 2.75rem);
+  height: clamp(2.25rem, 2.9vw, 2.75rem);
+  margin-bottom: 0.25rem;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+}
+
+/* У Range Rover нет логотипа в simple-icons — словесный знак капителью в
+   две строки с широкой разрядкой, по мотивам надписи на капоте */
+.wordmark {
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  margin-right: -0.32em;
+}
+
+.name {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-text);
+  white-space: nowrap;
+}
+
+.count {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+  white-space: nowrap;
+  transition: color 220ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .brand:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 45%, transparent);
+    background-color: rgb(216 182 132 / 0.05);
+    color: var(--c-gold);
+  }
+
+  .brand:hover .count {
+    color: var(--c-text-soft);
+  }
+}

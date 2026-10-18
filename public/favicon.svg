@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Монограмма DriveLux на ночном фоне — те же контуры, что в src/components/Logo/LogoMark.tsx -->
+  <defs>
+    <linearGradient id="g" x1="8" y1="4" x2="48" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f1d4a1" />
+      <stop offset="1" stop-color="#c99a5d" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#02070b" />
+  <g transform="translate(4 16)" stroke="url(#g)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8.6 9.4C10.2 5.9 12.9 4.3 17.6 4.3H36C46.6 4.3 52 9.4 51.6 16.1C51.1 23.4 44.8 27.8 34 27.8H20.4" />
+    <path d="M22.6 11.4L15.6 24.6C14.7 26.4 13.3 27.6 10.8 27.8H5" />
+  </g>
+</svg>

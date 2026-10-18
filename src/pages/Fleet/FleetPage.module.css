@@ -1,0 +1,564 @@
+/* --- Поиск ----------------------------------------------------------------------------
+   Поле справа от заголовка, по его нижней линии. Высота как у крупных
+   кнопок сайта — поиск здесь главный инструмент, не второстепенный */
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1.1rem;
+  color: var(--c-text-muted);
+  pointer-events: none;
+}
+
+/* 16px — iOS не приближает страницу при фокусе на поле */
+.searchInput {
+  width: 100%;
+  height: 3.25rem;
+  padding: 0 3rem 0 3rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--c-surface);
+  font: inherit;
+  font-size: 1rem;
+  color: var(--c-text);
+  transition: border-color 200ms var(--ease-soft);
+}
+
+.searchInput::placeholder {
+  color: var(--c-text-muted);
+}
+
+/* Свой крестик очистки вместо браузерного: тот разный в каждом браузере */
+.searchInput::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.searchInput:focus-visible {
+  outline: none;
+  border-color: var(--c-gold);
+}
+
+.searchClear {
+  position: absolute;
+  right: 0.5rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+  color: var(--c-text-muted);
+  transition: color 200ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .searchClear:hover {
+    color: var(--c-text);
+  }
+}
+
+/* --- Быстрые категории ------------------------------------------------------------------
+   Строка слов с числами над каталогом. Активная — золотая, с той же
+   «стрелкой спидометра» под словом, что у активного пункта меню: знак
+   «вы здесь» на всём сайте один. Подчёркивание лежит на линии под строкой */
+.categories {
+  display: flex;
+  gap: clamp(1.25rem, 2.6vw, 2.5rem);
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.category {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: var(--space-3) 0 var(--space-4);
+  border-radius: 0.25rem;
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  color: var(--c-text-soft);
+  white-space: nowrap;
+  transition: color 200ms var(--ease-soft);
+}
+
+.categoryCount {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+  transition: color 200ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .category:hover {
+    color: var(--c-text);
+  }
+}
+
+.category[aria-pressed='true'] {
+  color: var(--c-gold);
+}
+
+.category[aria-pressed='true'] .categoryCount {
+  color: color-mix(in srgb, var(--c-gold) 65%, transparent);
+}
+
+.category::after,
+.category::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  opacity: 0;
+  transition: opacity 220ms var(--ease-soft);
+}
+
+.category::after {
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--c-gold);
+  translate: -50% 0;
+}
+
+.category::before {
+  z-index: 1;
+  bottom: -3px;
+  width: 6px;
+  height: 6px;
+  background: var(--c-gold-light);
+  box-shadow: 0 0 8px 1px rgb(230 192 132 / 0.7);
+  translate: -50% 0;
+  rotate: 45deg;
+}
+
+.category[aria-pressed='true']::after,
+.category[aria-pressed='true']::before {
+  opacity: 1;
+}
+
+/* Планшет и телефон: восемь категорий в ширину не помещаются — строка
+   листается пальцем и выходит в поля страницы до краёв экрана.
+   Прокручиваемая строка обрезает всё, что ниже её края, поэтому
+   подчёркивание поднято внутрь кнопки, а ромбик убран */
+@media (max-width: 1023px) {
+  .categories {
+    margin-inline: calc(-1 * var(--page-gutter));
+    padding-inline: var(--page-gutter);
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Фокус с клавиатуры докручивает строку до кнопки — с полем от края */
+    scroll-padding-inline: var(--page-gutter);
+  }
+
+  .categories::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category::after {
+    bottom: 0;
+  }
+
+  .category::before {
+    display: none;
+  }
+}
+
+/* --- Две колонки ----------------------------------------------------------------------------
+   Фильтры слева фиксированной ширины и липнут к верху экрана при прокрутке:
+   длинную выдачу можно уточнять, не возвращаясь наверх. Если фильтры выше
+   экрана, колонка прокручивается сама */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 2.4vw, 2.5rem);
+  padding-top: clamp(1.5rem, 2.4vw, 2rem);
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 16.5rem minmax(0, 1fr);
+  }
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--space-5);
+  align-self: start;
+  max-height: calc(100vh - 2 * var(--space-5));
+  margin-right: calc(-1 * var(--space-3));
+  padding-right: var(--space-3);
+  padding-bottom: var(--space-8);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-line-strong) transparent;
+  /* Низ колонки растворяется — видно, что ниже есть ещё фильтры. Отступ
+     снизу даёт последнему фильтру выехать из-под затухания */
+  mask-image: linear-gradient(180deg, #000 calc(100% - 3rem), transparent);
+}
+
+.results {
+  min-width: 0;
+}
+
+/* --- Панель над выдачей ------------------------------------------------------------------------ */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+}
+
+.found {
+  font-size: var(--fs-ui);
+  color: var(--c-text-muted);
+}
+
+.foundNumber {
+  font-weight: 600;
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Кнопка «Фильтры» (планшет и телефон) — с числом выбранных фильтров */
+.filtersButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 2.75rem;
+  padding: 0 1rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  transition: border-color 200ms var(--ease-soft);
+}
+
+.filtersBadge {
+  display: grid;
+  place-items: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding-inline: 0.3rem;
+  border-radius: var(--radius-full);
+  background: var(--gold-gradient);
+  color: var(--c-on-gold);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+/* Сортировка — нативный список: на телефоне открывается системным
+   барабаном, с клавиатуры работает без доработок. Своя стрелка вместо
+   браузерной */
+.sort {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.sortSelect {
+  appearance: none;
+  height: 2.75rem;
+  padding: 0 2.5rem 0 1.1rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--c-surface);
+  font: inherit;
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  color: var(--c-text);
+  cursor: pointer;
+  transition: border-color 200ms var(--ease-soft);
+}
+
+.sortSelect:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 3px;
+}
+
+.sortChevron {
+  position: absolute;
+  right: 1rem;
+  color: var(--c-text-muted);
+  pointer-events: none;
+}
+
+/* Сетка или список — пара кнопок в общей рамке, выбранная подсвечена */
+.viewToggle {
+  display: inline-flex;
+  padding: 0.2rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+}
+
+.viewButton {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+  color: var(--c-text-muted);
+  transition:
+    color 200ms var(--ease-soft),
+    background-color 200ms var(--ease-soft);
+}
+
+.viewButton[aria-pressed='true'] {
+  background-color: var(--c-surface-raised);
+  color: var(--c-gold);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .filtersButton:hover,
+  .sortSelect:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+  }
+
+  .viewButton:not([aria-pressed='true']):hover {
+    color: var(--c-text);
+  }
+}
+
+/* --- Выбранные фильтры ------------------------------------------------------------------------
+   Теги с крестиком: каждый снимает один фильтр. «Сбросить фильтры» —
+   текстом в конце строки */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2.25rem;
+  padding: 0 0.7rem 0 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--c-gold) 40%, transparent);
+  border-radius: var(--radius-full);
+  background-color: rgb(216 182 132 / 0.08);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-gold);
+  white-space: nowrap;
+  transition:
+    background-color 200ms var(--ease-soft),
+    border-color 200ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
+    border-color: var(--c-gold);
+    background-color: rgb(216 182 132 / 0.16);
+  }
+
+  .resetLink:hover {
+    color: var(--c-gold);
+  }
+}
+
+.chip:active {
+  scale: 0.96;
+}
+
+/* Появление тега — короткий рост из точки: видно, что фильтр добавился */
+@media (prefers-reduced-motion: no-preference) {
+  .chip {
+    animation: chip-in 240ms var(--ease-out);
+  }
+}
+
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    scale: 0.85;
+  }
+}
+
+.resetLink {
+  padding-block: var(--space-2);
+  border-radius: 0.25rem;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-text-soft);
+  text-decoration: underline;
+  text-decoration-color: var(--c-line-strong);
+  text-underline-offset: 0.3em;
+  transition: color 200ms var(--ease-soft);
+}
+
+/* --- Выдача -----------------------------------------------------------------------------------
+   Сетка: на десктопе три карточки в ряд, на планшете и узком десктопе с
+   колонкой фильтров — две, на телефоне — одна. Список — строки во всю
+   ширину */
+.grid,
+.list {
+  display: grid;
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  margin-top: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+.grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1280px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* «Показать ещё» — по центру под выдачей, с подписью «Показано 9 из 23» */
+.more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: clamp(2rem, 3vw, 2.75rem);
+}
+
+.moreNote {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Выдвижная панель фильтров --------------------------------------------------------------------
+   Модальный <dialog> выезжает справа на всю высоту; на телефоне — на всю
+   ширину. Фон под ним затемняется. Закрытие тоже анимировано: overlay и
+   display переключаются после конца перехода (allow-discrete) */
+.drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(26rem, 100%);
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--c-line-strong);
+  background-color: var(--c-surface);
+  color: var(--c-text);
+  translate: 100% 0;
+}
+
+.drawer[open] {
+  translate: 0 0;
+}
+
+.drawer::backdrop {
+  background-color: rgb(0 0 0 / 0);
+}
+
+.drawer[open]::backdrop {
+  background-color: rgb(0 0 0 / 0.6);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .drawer {
+    transition:
+      translate 360ms var(--ease-out),
+      overlay 360ms allow-discrete,
+      display 360ms allow-discrete;
+  }
+
+  .drawer::backdrop {
+    transition:
+      background-color 360ms var(--ease-soft),
+      overlay 360ms allow-discrete,
+      display 360ms allow-discrete;
+  }
+
+  @starting-style {
+    .drawer[open] {
+      translate: 100% 0;
+    }
+
+    .drawer[open]::backdrop {
+      background-color: rgb(0 0 0 / 0);
+    }
+  }
+}
+
+.drawerPanel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Панель получает фокус при открытии только как точка отсчёта для Tab —
+   контур вокруг всей панели не нужен */
+.drawerPanel:focus {
+  outline: none;
+}
+
+.drawerHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.drawerTitle {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+.drawerClose {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-right: calc(-1 * var(--space-2));
+  border-radius: var(--radius-full);
+  color: var(--c-text-soft);
+}
+
+.drawerBody {
+  flex: 1;
+  padding: var(--space-5);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.drawerFoot {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5) max(var(--space-4), env(safe-area-inset-bottom));
+  border-top: 1px solid var(--c-line);
+  background-color: var(--c-surface);
+}
+
+.drawerApply {
+  flex: 1;
+}

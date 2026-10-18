@@ -1,0 +1,361 @@
+/* --- Страница отзывов ---------------------------------------------------------- */
+.body {
+  padding-top: clamp(1.5rem, 2.6vw, 2.25rem);
+}
+
+/* --- Сводка: оценка и распределение ------------------------------------------------
+   Слева — крупная средняя оценка со звёздами, справа — полоски по звёздам.
+   Полоска — кнопка-фильтр: золотая заливка показывает долю отзывов */
+.summary {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+  padding: clamp(1.25rem, 2.6vw, 2.25rem);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background: radial-gradient(70% 120% at 0% 0%, rgb(201 134 64 / 0.1), transparent 60%), var(--c-surface);
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.scoreValue {
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.scoreTotal {
+  margin-top: var(--space-2);
+  font-weight: 600;
+}
+
+.recommend {
+  margin-top: 0.15rem;
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.bars {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr) 2rem;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--radius-chip);
+  transition: background-color 160ms var(--ease-soft);
+}
+
+.bar:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.bar[aria-pressed='true'] {
+  background-color: rgb(216 182 132 / 0.1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bar:not(:disabled):hover {
+    background-color: rgb(255 255 255 / 0.04);
+  }
+}
+
+.barLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+.barLabel svg {
+  color: var(--c-gold);
+}
+
+.barTrack {
+  height: 0.45rem;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background-color: rgb(255 255 255 / 0.07);
+}
+
+.barFill {
+  display: block;
+  width: calc(var(--share) * 100%);
+  height: 100%;
+  border-radius: inherit;
+  background: var(--gold-gradient);
+}
+
+.barCount {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Панель фильтров --------------------------------------------------------------- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.ratingFilter {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 2.5rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-text-soft);
+  transition:
+    border-color 200ms var(--ease-soft),
+    background-color 200ms var(--ease-soft),
+    color 200ms var(--ease-soft);
+}
+
+.chip svg {
+  color: var(--c-gold);
+}
+
+.chip[aria-pressed='true'] {
+  border-color: transparent;
+  background: var(--gold-gradient);
+  color: var(--c-on-gold);
+}
+
+.chip[aria-pressed='true'] svg {
+  color: currentColor;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:not([aria-pressed='true']):hover {
+    border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+  }
+}
+
+.select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.select select {
+  height: 2.5rem;
+  padding: 0 2.4rem 0 1rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--c-surface);
+  font: inherit;
+  font-size: var(--fs-small);
+  color: var(--c-text);
+  appearance: none;
+  cursor: pointer;
+}
+
+.select select:focus-visible {
+  outline: none;
+  border-color: var(--c-gold);
+}
+
+.select svg {
+  position: absolute;
+  right: 0.85rem;
+  color: var(--c-text-muted);
+  pointer-events: none;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 2.5rem;
+  padding-inline: 0.9rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+  cursor: pointer;
+}
+
+.toggle input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--c-gold);
+}
+
+.toggle svg {
+  color: var(--c-gold);
+}
+
+.toggle:has(input:focus-visible) {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 3px;
+}
+
+.search {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 14rem;
+}
+
+.search > svg {
+  position: absolute;
+  left: 0.9rem;
+  color: var(--c-text-muted);
+  pointer-events: none;
+}
+
+.search input {
+  width: 100%;
+  height: 2.5rem;
+  padding: 0 2.4rem 0 2.5rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--c-surface);
+  font: inherit;
+  font-size: 1rem;
+  color: var(--c-text);
+}
+
+.search input::placeholder {
+  color: var(--c-text-muted);
+  font-size: var(--fs-small);
+}
+
+.search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search input:focus-visible {
+  outline: none;
+  border-color: var(--c-gold);
+}
+
+.search button {
+  position: absolute;
+  right: 0.4rem;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: var(--radius-full);
+  color: var(--c-text-muted);
+}
+
+.sort {
+  margin-left: auto;
+}
+
+/* --- Строка состояния ------------------------------------------------------------------ */
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  font-size: var(--fs-ui);
+  color: var(--c-text-soft);
+}
+
+.statusNumber {
+  font-weight: 700;
+  color: var(--c-text);
+}
+
+.reset {
+  border-radius: 0.25rem;
+  font-size: var(--fs-small);
+  color: var(--c-gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- Отзывы ----------------------------------------------------------------------------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.4vw, 1.5rem);
+  margin-top: var(--space-4);
+}
+
+/* Новая партия выходит лесенкой — как карточки каталога */
+@media (prefers-reduced-motion: no-preference) {
+  .item {
+    animation: rise 420ms var(--ease-out) backwards;
+    animation-delay: calc(min(var(--order, 0), 8) * 45ms);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
+
+.more {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.moreNote {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+/* --- Адаптив ----------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sort {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .toolbar {
+    gap: var(--space-2);
+  }
+
+  .search {
+    flex-basis: 100%;
+    order: -1;
+  }
+}

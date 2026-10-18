@@ -1,0 +1,199 @@
+/* --- Частые вопросы ------------------------------------------------------------- */
+.section {
+  padding-top: var(--section-space);
+}
+
+/* Слева пояснение и под ним колонка карточек, справа вопросы на обе
+   строки. Вторая строка слева тянется на всю оставшуюся высоту списка —
+   колонка карточек заполняет её до низа, пустого места не остаётся */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'intro list'
+    'aside list';
+  align-items: stretch;
+  gap: 0 clamp(2rem, 5.5vw, 6rem);
+}
+
+.intro {
+  grid-area: intro;
+}
+
+/* Колонка карточек: контакты по своей высоте, «В каждой аренде» забирает
+   остаток и делит его между пунктами */
+.aside {
+  grid-area: aside;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: clamp(1.5rem, 2.4vw, 2.25rem);
+}
+
+.lead {
+  max-width: 26rem;
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+  color: var(--c-text-soft);
+  text-wrap: pretty;
+}
+
+/* --- Карточка «Не нашли ответ?» ----------------------------------------------------- */
+.contact {
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background:
+    radial-gradient(80% 120% at 100% 0%, rgb(201 134 64 / 0.12), transparent 60%),
+    var(--c-surface);
+}
+
+.contactTitle {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.contactText {
+  margin-top: var(--space-2);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-text-muted);
+}
+
+.channels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+/* Каналы связи — тёмные кнопки с кантом, как «Войти» в шапке */
+.channel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 2.5rem;
+  padding-inline: 0.9rem 1rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-text);
+  white-space: nowrap;
+  transition:
+    border-color 200ms var(--ease-soft),
+    color 200ms var(--ease-soft);
+}
+
+.channel svg {
+  flex: none;
+  color: var(--c-gold);
+}
+
+.channelLogo {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .channel:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+    color: var(--c-gold);
+  }
+}
+
+.channel:active {
+  scale: 0.97;
+}
+
+/* --- Карточка «В каждой аренде» -----------------------------------------------------
+   Пункты под заголовком, разделены тонкими линиями; иконки — в рамках с
+   золотым кантом, как привилегии в баннере лояльности */
+.guarantees {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-panel);
+  background:
+    radial-gradient(90% 70% at 0% 100%, rgb(201 134 64 / 0.08), transparent 65%),
+    var(--c-surface);
+}
+
+.guaranteeList {
+  flex: 1;
+  display: grid;
+  grid-auto-rows: 1fr;
+  margin-top: var(--space-3);
+}
+
+.guarantee {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding-block: var(--space-3);
+  border-top: 1px solid var(--c-line);
+}
+
+.guarantee:first-child {
+  border-top: 0;
+}
+
+.guaranteeIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid color-mix(in srgb, var(--c-gold) 40%, transparent);
+  border-radius: var(--radius-chip);
+  background-color: rgb(2 7 11 / 0.4);
+  color: var(--c-gold);
+}
+
+.guaranteeTitle,
+.guaranteeText {
+  display: block;
+}
+
+.guaranteeTitle {
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.guaranteeText {
+  margin-top: 0.15rem;
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+/* --- Вопросы ------------------------------------------------------------------------
+   Сам список — components/Accordion; здесь только место в сетке */
+.list {
+  grid-area: list;
+}
+
+/* --- Адаптив -----------------------------------------------------------------
+   ≤1000px — одна колонка в порядке разметки: пояснение, вопросы, контакты */
+@media (max-width: 1000px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-template-areas:
+      'intro'
+      'list'
+      'aside';
+  }
+
+  .lead {
+    margin-bottom: var(--space-5);
+  }
+
+  .aside {
+    margin-top: var(--space-5);
+  }
+}

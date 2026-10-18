@@ -1,0 +1,168 @@
+/* --- Переключатель языка -----------------------------------------------------------
+   Компактная пилюля с кантом — тише, чем «Войти»: это настройка, а не
+   действие. Список языков — тёмное стекло под кнопкой (или над ней в
+   подвале), появляется коротким проявлением */
+.root {
+  position: relative;
+}
+
+.lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 2.25rem;
+  padding-inline: 0.75rem 0.6rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--c-text);
+  transition:
+    border-color 200ms var(--ease-soft),
+    color 200ms var(--ease-soft);
+}
+
+.chevron {
+  color: var(--c-text-muted);
+  transition:
+    color 200ms var(--ease-soft),
+    rotate 220ms var(--ease-out);
+}
+
+.lang[aria-expanded='true'] {
+  border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+}
+
+.lang[aria-expanded='true'] .chevron {
+  rotate: 180deg;
+  color: var(--c-gold);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lang:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+  }
+
+  .lang:hover .chevron {
+    color: var(--c-gold);
+  }
+}
+
+/* --- Список языков ------------------------------------------------------------------ */
+.menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  display: grid;
+  gap: 0.15rem;
+  min-width: 11rem;
+  padding: 0.35rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  background-color: rgb(8 13 19 / 0.96);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.menu[data-placement='top'] {
+  top: auto;
+  bottom: calc(100% + 0.5rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .menu[data-open] {
+    animation: menu-in 180ms var(--ease-out);
+  }
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    translate: 0 -0.35rem;
+  }
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border-radius: var(--radius-chip);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-text-soft);
+  text-align: left;
+  transition:
+    background-color 160ms var(--ease-soft),
+    color 160ms var(--ease-soft);
+}
+
+.option[aria-current] {
+  color: var(--c-text);
+}
+
+.optionIcon {
+  flex: none;
+  color: var(--c-text-muted);
+}
+
+.optionName {
+  flex: 1;
+}
+
+.optionCode {
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--c-text-muted);
+}
+
+.check {
+  flex: none;
+  color: var(--c-gold);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option:hover {
+    background-color: rgb(255 255 255 / 0.05);
+    color: var(--c-text);
+  }
+}
+
+.option:focus-visible {
+  outline-offset: -2px;
+}
+
+/* --- «Таблетки» мобильного меню ---------------------------------------------------- */
+.toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+}
+
+.toggleButton {
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-text-soft);
+  transition:
+    background-color 200ms var(--ease-soft),
+    color 200ms var(--ease-soft);
+}
+
+.toggleButton[aria-pressed='true'] {
+  background: var(--gold-gradient);
+  color: var(--c-on-gold);
+}
+
+/* Закрытый список: атрибут hidden, но display: grid выше перебил бы его */
+.menu[hidden] {
+  display: none;
+}

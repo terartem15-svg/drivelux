@@ -1,0 +1,93 @@
+/* --- Лучшие предложения ------------------------------------------------------
+   Сверху отступ меньше обычного: секция продолжает первый экран сразу под
+   линией ряда преимуществ */
+.section {
+  padding-top: clamp(1.5rem, 2.6vw, 2.5rem);
+}
+
+/* --- Карусель -------------------------------------------------------------------
+   Десктоп: пять карточек в ряд по сетке, стрелки — в полях страницы по
+   бокам ряда, по центру его высоты */
+.carousel {
+  position: relative;
+}
+
+.track {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.2vw, 1.25rem);
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--c-night);
+  color: var(--c-text);
+  translate: 0 -50%;
+  transition:
+    border-color 200ms var(--ease-soft),
+    color 200ms var(--ease-soft);
+}
+
+.arrowPrev {
+  right: calc(100% + clamp(0.75rem, 1.2vw, 1.25rem));
+}
+
+.arrowNext {
+  left: calc(100% + clamp(0.75rem, 1.2vw, 1.25rem));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .arrow:hover {
+    border-color: var(--c-gold);
+    color: var(--c-gold);
+  }
+}
+
+.arrow:active {
+  scale: 0.95;
+}
+
+/* --- Адаптив -----------------------------------------------------------------
+   ≤1200px полей страницы уже не хватает под стрелки, а пять карточек в ряд
+   становятся слишком узкими: ряд превращается в горизонтальную ленту со
+   «щелчком» по карточкам. Лента выходит в поля страницы до краёв экрана —
+   видно, что за краем есть ещё карточки */
+@media (max-width: 1200px) {
+  .arrow {
+    display: none;
+  }
+
+  .track {
+    display: flex;
+    margin-inline: calc(-1 * var(--page-gutter));
+    padding-inline: var(--page-gutter);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--page-gutter);
+    scrollbar-width: none;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slide {
+    flex: 0 0 clamp(15rem, 34vw, 18rem);
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 560px) {
+  .slide {
+    flex-basis: 72vw;
+  }
+}

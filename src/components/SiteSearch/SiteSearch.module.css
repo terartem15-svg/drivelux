@@ -1,0 +1,375 @@
+/* --- Окно поиска -------------------------------------------------------------------
+   Модальный <dialog> у верхнего края экрана: под ним затемнённая и размытая
+   страница. Появление — проявление со сдвигом вниз, фон — затухание */
+.dialog {
+  width: min(44rem, 100% - 2rem);
+  max-width: none;
+  max-height: min(42rem, 100dvh - 4rem);
+  margin: clamp(1rem, 9vh, 6rem) auto auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background-color: rgb(8 13 19 / 0.97);
+  box-shadow: 0 40px 90px -30px rgb(0 0 0 / 0.95);
+  color: var(--c-text);
+}
+
+.dialog::backdrop {
+  background-color: rgb(2 7 11 / 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dialog[open] {
+    animation: search-in 260ms var(--ease-out);
+  }
+
+  .dialog[open]::backdrop {
+    animation: backdrop-in 260ms var(--ease-soft);
+  }
+}
+
+@keyframes search-in {
+  from {
+    opacity: 0;
+    translate: 0 -0.75rem;
+    scale: 0.985;
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+}
+
+/* --- Поле -------------------------------------------------------------------------- */
+.field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.fieldIcon {
+  flex: none;
+  color: var(--c-gold);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 3rem;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 1.0625rem;
+  color: var(--c-text);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--c-text-muted);
+}
+
+.input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.clear {
+  flex: none;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-chip);
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+  transition: color 160ms var(--ease-soft);
+}
+
+.close {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  color: var(--c-text-soft);
+  transition:
+    color 160ms var(--ease-soft),
+    background-color 160ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .clear:hover,
+  .close:hover {
+    color: var(--c-gold);
+  }
+
+  .close:hover {
+    background-color: rgb(255 255 255 / 0.05);
+  }
+}
+
+/* --- Популярные запросы ------------------------------------------------------------- */
+.chipsBlock {
+  padding: var(--space-4) var(--space-5) 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  height: 2rem;
+  padding-inline: 0.85rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+  transition:
+    border-color 160ms var(--ease-soft),
+    color 160ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+    color: var(--c-gold);
+  }
+}
+
+.clearRecent {
+  margin-top: var(--space-3);
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- Результаты ---------------------------------------------------------------------- */
+.results {
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.15) transparent;
+}
+
+.group + .group {
+  margin-top: var(--space-2);
+}
+
+.groupTitle {
+  padding: var(--space-3) var(--space-2) var(--space-2);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.chipsBlock .groupTitle {
+  padding: 0 0 var(--space-3);
+}
+
+.options {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 3.25rem;
+  padding: 0.45rem var(--space-3) 0.45rem 0.45rem;
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  transition: background-color 120ms var(--ease-soft);
+}
+
+.option[aria-selected='true'] {
+  background-color: rgb(255 255 255 / 0.06);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-gold) 35%, transparent);
+}
+
+.optionArrow {
+  flex: none;
+  color: var(--c-text-muted);
+  opacity: 0;
+  translate: -0.25rem 0;
+  transition:
+    opacity 160ms var(--ease-soft),
+    translate 200ms var(--ease-out);
+}
+
+.option[aria-selected='true'] .optionArrow {
+  opacity: 1;
+  translate: 0 0;
+  color: var(--c-gold);
+}
+
+.thumb,
+.rowIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  overflow: hidden;
+  color: var(--c-text-soft);
+}
+
+.thumb {
+  width: 4.25rem;
+  height: 2.85rem;
+  border-radius: var(--radius-chip);
+  background-color: var(--c-surface-raised);
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rowIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-full);
+  background-color: var(--c-surface-raised);
+}
+
+.logo {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.rowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.rowTitle {
+  overflow: hidden;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--c-text);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rowNote {
+  overflow: hidden;
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.price {
+  flex: none;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.priceUnit {
+  font-weight: 400;
+  color: var(--c-text-muted);
+}
+
+.empty {
+  padding: var(--space-7) var(--space-5);
+  text-align: center;
+}
+
+.emptyTitle {
+  font-weight: 600;
+}
+
+.emptyText {
+  margin-top: var(--space-2);
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+/* --- Низ окна ------------------------------------------------------------------------- */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--c-line);
+  background-color: rgb(255 255 255 / 0.015);
+}
+
+.all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: 0.25rem;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-gold);
+}
+
+.hints {
+  display: flex;
+  gap: var(--space-4);
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.hints kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.3rem;
+  height: 1.3rem;
+  margin-right: 0.15rem;
+  padding-inline: 0.3rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: 0.3rem;
+  font-family: inherit;
+  font-size: 0.6875rem;
+}
+
+/* На телефоне окно — во всю ширину у верха экрана, подсказок клавиш нет */
+@media (max-width: 640px) {
+  .dialog {
+    width: calc(100% - 1rem);
+    max-height: calc(100dvh - 1rem);
+    margin-top: 0.5rem;
+  }
+
+  .hints {
+    display: none;
+  }
+
+  .thumb {
+    width: 3.5rem;
+    height: 2.35rem;
+  }
+
+  .priceUnit {
+    display: none;
+  }
+}

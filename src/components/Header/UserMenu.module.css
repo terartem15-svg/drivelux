@@ -1,0 +1,177 @@
+/* --- Меню аккаунта ------------------------------------------------------------------
+   Кнопка повторяет форму «Войти» (тёмная с кантом), только вместо иконки —
+   золотой кружок с инициалами */
+.root {
+  position: relative;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  height: 2.75rem;
+  padding: 0 0.8rem 0 0.4rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  background-color: rgb(2 7 11 / 0.6);
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--c-text);
+  transition: border-color 200ms var(--ease-soft);
+}
+
+.button[aria-expanded='true'] {
+  border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+  }
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: var(--radius-full);
+  background: var(--gold-gradient);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--c-on-gold);
+}
+
+.name {
+  max-width: 7rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.chevron {
+  color: var(--c-text-muted);
+  transition: rotate 220ms var(--ease-out);
+}
+
+.button[aria-expanded='true'] .chevron {
+  rotate: 180deg;
+}
+
+/* --- Выпадающий список ---------------------------------------------------------------- */
+.menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: 15.5rem;
+  padding: 0.4rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  background-color: rgb(8 13 19 / 0.97);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.menu[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .menu:not([hidden]) {
+    animation: menu-in 180ms var(--ease-out);
+  }
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    translate: 0 -0.35rem;
+  }
+}
+
+.head {
+  padding: 0.6rem 0.7rem 0.7rem;
+  border-bottom: 1px solid var(--c-line);
+  margin-bottom: 0.3rem;
+}
+
+.fullName {
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+.email {
+  overflow: hidden;
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.list {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border-radius: var(--radius-chip);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+  text-align: left;
+  transition:
+    background-color 160ms var(--ease-soft),
+    color 160ms var(--ease-soft);
+}
+
+.item svg {
+  flex: none;
+  color: var(--c-text-muted);
+}
+
+.item:focus-visible {
+  outline-offset: -2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover {
+    background-color: rgb(255 255 255 / 0.05);
+    color: var(--c-text);
+  }
+
+  .item:hover svg {
+    color: var(--c-gold);
+  }
+}
+
+.count {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--c-gold);
+}
+
+.note {
+  padding: 0.5rem 0.7rem 0.3rem;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  color: var(--c-text-muted);
+}
+
+/* На тех же ширинах, где «Войти» сжимается до иконки (Header.module.css),
+   от кнопки аккаунта остаётся кружок с инициалами — имя есть в списке */
+@media (min-width: 1241px) and (max-width: 1400px), (max-width: 900px) {
+  .name,
+  .chevron {
+    display: none;
+  }
+
+  .button {
+    padding-right: 0.4rem;
+  }
+}

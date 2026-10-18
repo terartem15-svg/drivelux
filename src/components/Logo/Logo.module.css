@@ -1,0 +1,38 @@
+/* --- Логотип ------------------------------------------------------------------
+   Пропорции с референса: монограмма чуть ниже словесного знака, подпись
+   мелкая, капителью, с разрядкой — примерно на ширину названия */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.75rem, 1.4vw, 1.25rem);
+}
+
+.mark {
+  flex: none;
+  width: clamp(2.75rem, 3.6vw, 3.5rem);
+  height: auto;
+}
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.name {
+  font-size: clamp(1.3rem, 1.85vw, 1.7rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--c-text);
+}
+
+.tagline {
+  font-size: 0.5625rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  white-space: nowrap;
+}

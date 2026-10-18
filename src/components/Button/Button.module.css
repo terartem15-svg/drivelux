@@ -1,0 +1,126 @@
+/* --- Кнопка ----------------------------------------------------------------- */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    transform 160ms var(--ease-out),
+    box-shadow 220ms var(--ease-soft),
+    background-color 220ms var(--ease-soft),
+    border-color 220ms var(--ease-soft),
+    filter 220ms var(--ease-soft);
+}
+
+/* Отклик на нажатие — кнопка чуть проседает */
+.button:active {
+  transform: scale(0.97);
+}
+
+/* --- Размеры -----------------------------------------------------------------
+   sm — карточки, md — шапка и секции, lg — первый экран и панель поиска.
+   Разрыв между текстом и стрелкой у золотых кнопок md и lg широкий, как
+   в референсе: стрелка «отъезжает» к краю, а не липнет к слову. У sm
+   кнопка растянута на ширину карточки — текст со стрелкой по центру */
+.sm {
+  height: 2.5rem;
+  padding-inline: 1rem;
+  font-size: 0.875rem;
+}
+
+.md {
+  height: 2.75rem;
+  padding-inline: 1.25rem;
+}
+
+.lg {
+  height: 3.25rem;
+  padding-inline: 1.75rem;
+}
+
+.gold.sm {
+  gap: var(--space-2);
+}
+
+.gold.md {
+  gap: var(--space-5);
+  padding-inline: 1.375rem 1.125rem;
+}
+
+.gold.lg {
+  gap: var(--space-6);
+  padding-inline: 1.75rem 1.5rem;
+}
+
+/* --- Золотая пилюля ------------------------------------------------------------ */
+.gold {
+  border-radius: var(--radius-full);
+  color: var(--c-on-gold);
+  background: var(--gold-gradient);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    var(--shadow-gold);
+}
+
+/* --- Тёмная с кантом ------------------------------------------------------------
+   Не пилюля, а скруглённый прямоугольник — так в референсе «Войти» отличается
+   от главных действий не только цветом */
+.outline {
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  color: var(--c-text);
+  background-color: rgb(2 7 11 / 0.6);
+}
+
+/* --- Пилюля с кантом ---------------------------------------------------------------
+   Второе действие рядом с золотой кнопкой: та же форма, без заливки */
+.ghost {
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  color: var(--c-text);
+  background-color: transparent;
+}
+
+/* Недоступная кнопка — приглушена и не реагирует на наведение и нажатие */
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.icon {
+  display: inline-flex;
+}
+
+.arrow {
+  flex: none;
+  transition: transform 220ms var(--ease-out);
+}
+
+/* Наведение — только на устройствах с мышью: на тач-экранах «залипшее»
+   состояние после тапа выглядит как баг */
+@media (hover: hover) and (pointer: fine) {
+  .gold:hover {
+    filter: brightness(1.06);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.4),
+      0 14px 34px -12px rgb(214 170 110 / 0.75);
+  }
+
+  .gold:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  .outline:hover,
+  .ghost:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+  }
+
+  .ghost:hover {
+    color: var(--c-gold);
+  }
+}

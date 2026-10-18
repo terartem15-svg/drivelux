@@ -1,0 +1,249 @@
+/* --- Отзывы -------------------------------------------------------------------- */
+.section {
+  padding-top: var(--section-space);
+}
+
+/* --- Общий рейтинг рядом с заголовком ---------------------------------------------
+   Крупная цифра и справа от неё звёзды с числом отзывов — компактно, на
+   одной линии со ссылкой «Все отзывы» */
+.summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-right: var(--space-6);
+  border-right: 1px solid var(--c-line);
+}
+
+.summaryValue {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.summaryDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.summaryTotal {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.stars {
+  display: inline-flex;
+  gap: 0.15rem;
+  color: var(--c-gold);
+}
+
+/* --- Карточки --------------------------------------------------------------------- */
+.list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.4vw, 1.5rem);
+}
+
+/* position: relative держит скрытую подпись «Автомобиль:» внутри карточки:
+   иначе в ленте на узких экранах она вылезала бы за край и раздувала
+   ширину страницы (см. components/CarCard) */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  height: 100%;
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  background-color: var(--c-surface);
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Аватар: фото или инициалы на тёплом градиенте, с тонким золотым кантом */
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid color-mix(in srgb, var(--c-gold) 35%, transparent);
+  border-radius: var(--radius-full);
+  background: radial-gradient(circle at 30% 25%, #2a2218, #120f0b);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--c-gold);
+  object-fit: cover;
+}
+
+.authorText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.name {
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.date {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.quote {
+  font-size: var(--fs-ui);
+  line-height: 1.65;
+  color: var(--c-text-soft);
+  text-wrap: pretty;
+}
+
+/* Низ карточки — машина клиента (и кнопка «Полезно» на странице отзывов)
+   под тонкой линией: у всех карточек ряда на одной высоте, даже если
+   отзывы разной длины */
+.cardFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--c-line);
+}
+
+.car {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-text-muted);
+}
+
+.car svg {
+  flex: none;
+  color: var(--c-gold);
+}
+
+.carLink {
+  border-radius: 0.25rem;
+  transition: color 200ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .carLink:hover {
+    color: var(--c-gold);
+  }
+}
+
+/* Ответ компании — тонкая золотая линия слева, как цитата в цитате */
+.reply {
+  padding: var(--space-3) var(--space-4);
+  border-left: 2px solid color-mix(in srgb, var(--c-gold) 60%, transparent);
+  border-radius: 0 var(--radius-chip) var(--radius-chip) 0;
+  background-color: rgb(216 182 132 / 0.05);
+}
+
+.replyTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--c-gold);
+}
+
+.replyText {
+  margin-top: 0.3rem;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-text-soft);
+}
+
+.helpful {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2rem;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--c-text-soft);
+  transition:
+    border-color 200ms var(--ease-soft),
+    color 200ms var(--ease-soft),
+    background-color 200ms var(--ease-soft);
+}
+
+.helpful[aria-pressed='true'] {
+  border-color: color-mix(in srgb, var(--c-gold) 60%, transparent);
+  background-color: rgb(216 182 132 / 0.1);
+  color: var(--c-gold);
+}
+
+.helpfulCount {
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-muted);
+}
+
+.helpful[aria-pressed='true'] .helpfulCount {
+  color: var(--c-gold);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .helpful:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+  }
+}
+
+/* --- Адаптив -----------------------------------------------------------------
+   ≤1000px — горизонтальная лента со свайпом и «щелчком» по карточкам,
+   выходит в поля страницы до краёв экрана, как карусель машин.
+   ≤560px рейтинг теряет разделитель: ссылка переносится под него */
+@media (max-width: 1000px) {
+  .list {
+    display: flex;
+    margin-inline: calc(-1 * var(--page-gutter));
+    padding-inline: var(--page-gutter);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--page-gutter);
+    scrollbar-width: none;
+  }
+
+  .list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slide {
+    flex: 0 0 clamp(17rem, 44vw, 21rem);
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 560px) {
+  .slide {
+    flex-basis: 82vw;
+  }
+
+  .summary {
+    padding-right: 0;
+    border-right: 0;
+  }
+}

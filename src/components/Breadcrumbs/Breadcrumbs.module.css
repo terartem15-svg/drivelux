@@ -1,0 +1,34 @@
+/* --- Хлебные крошки ----------------------------------------------------------------
+   Мелко и приглушённо: это навигация «откуда я», а не заголовок.
+   Разделитель — косая черта, тусклее ссылок */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.crumb {
+  min-width: 0;
+}
+
+.crumb [aria-current='page'] {
+  color: var(--c-text-soft);
+}
+
+.link {
+  border-radius: 0.25rem;
+  transition: color 200ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--c-gold);
+  }
+}
+
+.separator {
+  color: rgb(255 255 255 / 0.22);
+}

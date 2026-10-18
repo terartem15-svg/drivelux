@@ -1,0 +1,475 @@
+/* --- Форма заказа услуги -------------------------------------------------------------
+   Одна панель: слева заголовок, пометка о демо и выбранная машина, справа
+   поля. ≤960px всё в одну колонку: сначала заголовок и машина, потом поля */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding: clamp(1.5rem, 3.5vw, 3rem);
+  border: 1px solid var(--c-line-strong);
+  border-radius: calc(var(--radius-panel) * 1.25);
+  background:
+    radial-gradient(60% 80% at 100% 100%, rgb(201 134 64 / 0.08), transparent 65%),
+    var(--c-surface);
+  box-shadow: var(--shadow-panel);
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.eyebrow {
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.title {
+  margin-top: var(--space-3);
+  font-size: var(--fs-h2);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* Заголовок получает фокус после «Изменить данные» — рамка не нужна */
+.title:focus {
+  outline: none;
+}
+
+.lead {
+  margin-top: var(--space-4);
+  font-size: var(--fs-ui);
+  line-height: 1.65;
+  color: var(--c-text-soft);
+}
+
+.demo {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--c-gold);
+}
+
+.demo svg {
+  flex: none;
+  margin-top: 0.15rem;
+}
+
+/* --- Выбранная машина ------------------------------------------------------------------ */
+.carCard {
+  margin-top: var(--space-6);
+  overflow: hidden;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-card);
+  background-color: var(--c-night);
+}
+
+.carPhoto {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  color: rgb(216 182 132 / 0.28);
+  background-color: var(--c-surface-raised);
+}
+
+.carPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carBody {
+  padding: var(--space-4) var(--space-5) var(--space-5);
+}
+
+.carClass {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.carName {
+  margin-top: var(--space-1);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+.carPrice {
+  margin-top: var(--space-1);
+  font-size: var(--fs-small);
+  color: var(--c-gold);
+}
+
+.carActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin-top: var(--space-4);
+}
+
+.carLink {
+  border-radius: 0.25rem;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-text-soft);
+  text-decoration: underline;
+  text-decoration-color: var(--c-line-strong);
+  text-underline-offset: 0.3em;
+  transition: color 200ms var(--ease-soft);
+}
+
+.carLink:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .carLink:hover {
+    color: var(--c-gold);
+  }
+}
+
+.carEmpty {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-text-muted);
+}
+
+.carEmpty svg {
+  flex: none;
+  color: rgb(216 182 132 / 0.45);
+}
+
+.carEmpty a {
+  border-radius: 0.2rem;
+  color: var(--c-text-soft);
+  text-decoration: underline;
+  text-decoration-color: var(--c-line-strong);
+  text-underline-offset: 0.25em;
+}
+
+/* --- Поля ------------------------------------------------------------------------------- */
+.form {
+  min-width: 0;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-4);
+}
+
+@media (max-width: 560px) {
+  .fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.field {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.label {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-text-soft);
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--c-text-muted);
+}
+
+/* Поля — графит темнее панели, кант теплеет при фокусе. 16px — iOS не
+   приближает страницу при фокусе. Те же размеры, что в бронировании */
+.control {
+  width: 100%;
+  height: 3rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-chip);
+  background-color: var(--c-night);
+  font: inherit;
+  font-size: 1rem;
+  color: var(--c-text);
+  transition:
+    border-color 200ms var(--ease-soft),
+    box-shadow 200ms var(--ease-soft);
+}
+
+.control::placeholder {
+  color: var(--c-text-muted);
+  opacity: 0.8;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .control:hover:not(:disabled, :focus-visible) {
+    border-color: rgb(255 255 255 / 0.26);
+  }
+}
+
+.control:focus-visible {
+  outline: none;
+  border-color: var(--c-gold);
+  box-shadow: 0 0 0 3px rgb(216 182 132 / 0.18);
+}
+
+.control:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.control[aria-invalid='true'] {
+  border-color: #d0796b;
+}
+
+.control::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  cursor: pointer;
+}
+
+.textarea {
+  height: auto;
+  min-height: 6rem;
+  padding-block: 0.75rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+/* Группа флажков (оборудование) — пилюли-переключатели */
+.group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.group legend {
+  float: left;
+  width: 100%;
+  margin-bottom: var(--space-2);
+  padding: 0;
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  clear: both;
+}
+
+.check {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  padding: 0 1rem 0 0.8rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--c-night);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+  cursor: pointer;
+  transition:
+    border-color 200ms var(--ease-soft),
+    color 200ms var(--ease-soft),
+    background-color 200ms var(--ease-soft);
+}
+
+.check input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--c-gold);
+  cursor: pointer;
+}
+
+.check:has(input:checked) {
+  border-color: color-mix(in srgb, var(--c-gold) 60%, transparent);
+  background-color: rgb(216 182 132 / 0.08);
+  color: var(--c-text);
+}
+
+.check:has(input:focus-visible) {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 2px;
+}
+
+.check input:focus-visible {
+  outline: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .check:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 45%, transparent);
+  }
+}
+
+.group:disabled .check {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.group[aria-invalid='true'] .check {
+  border-color: #d0796b;
+}
+
+/* Ошибка под полем — тёплый красный, читаемый на чёрном (контраст > 4.5:1) */
+.error {
+  font-size: var(--fs-small);
+  line-height: 1.45;
+  color: #f09a8c;
+}
+
+.hint {
+  font-size: 0.75rem;
+  text-align: right;
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.errorSummary:not(:empty) {
+  margin-top: var(--space-5);
+  font-size: var(--fs-small);
+  color: #f09a8c;
+}
+
+.submitRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  margin-top: var(--space-6);
+}
+
+@media (max-width: 480px) {
+  .submitRow > button {
+    flex: 1 1 100%;
+  }
+}
+
+.submitNote {
+  flex: 1 1 14rem;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--c-text-muted);
+}
+
+.spinner {
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.4s;
+  }
+}
+
+/* --- Итог после проверки ------------------------------------------------------------------- */
+.result {
+  max-width: 48rem;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 3.5vw, 3rem);
+  border: 1px solid color-mix(in srgb, var(--c-gold) 40%, transparent);
+  border-radius: calc(var(--radius-panel) * 1.25);
+  background:
+    radial-gradient(70% 90% at 50% 0%, rgb(201 134 64 / 0.12), transparent 70%),
+    var(--c-surface);
+  text-align: center;
+}
+
+.result:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .result {
+    animation: result-in 500ms var(--ease-out);
+  }
+}
+
+@keyframes result-in {
+  from {
+    opacity: 0;
+    translate: 0 0.75rem;
+  }
+}
+
+.resultIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 1px solid color-mix(in srgb, var(--c-gold) 45%, transparent);
+  border-radius: var(--radius-full);
+  color: var(--c-gold);
+}
+
+.result .title {
+  margin-top: var(--space-4);
+}
+
+.resultText {
+  max-width: 36rem;
+  margin: var(--space-4) auto 0;
+  line-height: 1.65;
+  color: var(--c-text-soft);
+}
+
+.recap {
+  max-width: 34rem;
+  margin: var(--space-6) auto 0;
+  text-align: left;
+}
+
+.recapRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: 0.65rem;
+  border-bottom: 1px solid var(--c-line);
+  font-size: var(--fs-ui);
+}
+
+.recapRow dt {
+  flex: none;
+  color: var(--c-text-muted);
+}
+
+.recapRow dd {
+  font-weight: 500;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.resultActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}

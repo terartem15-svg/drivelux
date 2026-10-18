@@ -1,0 +1,695 @@
+/* --- Страница услуги ----------------------------------------------------------------
+   Секции разделены воздухом, а не рамками: рамка есть только у условий и
+   формы — это «документы» страницы, остальное читается свободно */
+.page > section + section {
+  margin-top: var(--section-space);
+}
+
+/* --- Общие заголовки секций ------------------------------------------------------------ */
+.sectionEyebrow,
+.eyebrow {
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.sectionTitle {
+  margin-top: var(--space-3);
+  font-size: var(--fs-h2);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: 0.25rem;
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  color: var(--c-text-soft);
+  white-space: nowrap;
+  transition: color 200ms var(--ease-soft);
+}
+
+.textLink svg {
+  transition: translate 220ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .textLink:hover {
+    color: var(--c-gold);
+  }
+
+  .textLink:hover svg {
+    translate: 3px 0;
+  }
+}
+
+/* --- Первый экран -----------------------------------------------------------------------
+   Асимметрия: текст узкой колонкой слева, фото шире и выше справа.
+   ≤1023px — текст сверху, фото полосой под ним */
+.hero {
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(2rem, 4.5vw, 5rem);
+  align-items: center;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+@media (max-width: 1023px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--c-gold);
+}
+
+.eyebrowIcon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid color-mix(in srgb, var(--c-gold) 40%, transparent);
+  border-radius: var(--radius-full);
+}
+
+.title {
+  margin-top: var(--space-4);
+  font-size: clamp(2.25rem, 4vw, 3.75rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.tagline {
+  margin-top: var(--space-3);
+  font-size: clamp(1.0625rem, 1.4vw, 1.375rem);
+  font-weight: 500;
+  color: var(--c-gold);
+}
+
+.lead {
+  max-width: 32rem;
+  margin-top: var(--space-5);
+  font-size: var(--fs-lead);
+  line-height: 1.7;
+  color: var(--c-text-soft);
+  text-wrap: pretty;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+@media (max-width: 480px) {
+  .heroActions > * {
+    flex: 1 1 100%;
+  }
+}
+
+/* Фото — крупно, со скруглением панели; внизу затемнение под плашку цены */
+.heroMedia {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border: 1px solid var(--c-line-strong);
+  border-radius: calc(var(--radius-panel) * 1.5);
+  background-color: var(--c-surface-raised);
+  box-shadow: var(--shadow-panel);
+}
+
+@media (max-width: 1023px) {
+  .heroMedia {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+/* Телефон: кадр выше, плашка цены компактнее — машина остаётся видна */
+@media (max-width: 560px) {
+  .heroMedia {
+    aspect-ratio: 4 / 3.4;
+  }
+
+  .priceChip {
+    padding: 0.6rem 0.85rem;
+  }
+
+  .priceNote {
+    font-size: 0.6875rem;
+  }
+}
+
+.heroMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroMedia::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgb(2 7 11 / 0.75) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.priceChip {
+  position: absolute;
+  bottom: clamp(1rem, 2vw, 1.5rem);
+  left: clamp(1rem, 2vw, 1.5rem);
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+  max-width: calc(100% - 2rem);
+  padding: 0.8rem 1.1rem;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: var(--radius-card);
+  background-color: rgb(2 7 11 / 0.62);
+  backdrop-filter: blur(10px);
+}
+
+.priceFrom,
+.priceUnit {
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+}
+
+.priceAmount {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--c-gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.priceNote {
+  flex-basis: 100%;
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.photoCredit {
+  margin-top: var(--space-3);
+  font-size: 0.75rem;
+  text-align: right;
+  color: var(--c-text-muted);
+}
+
+.photoCredit a,
+.faqNote a {
+  border-radius: 0.2rem;
+  color: var(--c-text-soft);
+  text-decoration: underline;
+  text-decoration-color: var(--c-line-strong);
+  text-underline-offset: 0.25em;
+}
+
+/* --- Описание и преимущества ---------------------------------------------------------------
+   Слева — крупный текст об услуге, справа — преимущества сеткой 2×2 без
+   карточек: только тонкие линии между ними. Первое преимущество отмечено
+   золотым отблеском — у сетки появляется «вход» */
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 6rem);
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .about {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.aboutText {
+  max-width: 30rem;
+  margin-top: var(--space-5);
+  font-size: var(--fs-lead);
+  line-height: 1.75;
+  color: var(--c-text-soft);
+  text-wrap: pretty;
+}
+
+.benefits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--c-line);
+}
+
+@media (max-width: 560px) {
+  .benefits {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.benefit {
+  padding: clamp(1.25rem, 2.4vw, 2rem) clamp(1rem, 2vw, 1.75rem);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.benefit:nth-child(odd) {
+  padding-left: 0;
+  border-right: 1px solid var(--c-line);
+}
+
+.benefit:first-child {
+  background: radial-gradient(90% 90% at 0% 0%, rgb(201 134 64 / 0.12), transparent 70%);
+}
+
+@media (max-width: 560px) {
+  .benefit,
+  .benefit:nth-child(odd) {
+    padding-inline: 0;
+    border-right: 0;
+  }
+}
+
+.benefitIcon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid color-mix(in srgb, var(--c-gold) 40%, transparent);
+  border-radius: var(--radius-card);
+  background-color: rgb(216 182 132 / 0.06);
+  color: var(--c-gold);
+}
+
+.benefitTitle {
+  margin-top: var(--space-4);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.benefitText {
+  margin-top: var(--space-2);
+  font-size: var(--fs-small);
+  line-height: 1.65;
+  color: var(--c-text-muted);
+  text-wrap: pretty;
+}
+
+/* --- Как это работает --------------------------------------------------------------------
+   Шаги в ряд, крупные номера контуром; тонкая золотая линия идёт через
+   все номера. ≤860px — шаги столбиком, линия вертикальная слева */
+.sectionHead {
+  max-width: 40rem;
+}
+
+.steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--steps, 4), minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2.5rem);
+  margin-top: clamp(1.75rem, 3vw, 2.75rem);
+  counter-reset: step;
+}
+
+/* Линия на уровне середины номеров */
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--c-gold) 55%, transparent), var(--c-line) 85%);
+}
+
+.step {
+  position: relative;
+}
+
+.stepNumber {
+  position: relative;
+  display: inline-block;
+  padding-right: var(--space-3);
+  background-color: var(--c-night);
+  font-size: clamp(3rem, 4.5vw, 4rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--c-gold) 75%, transparent);
+}
+
+.step:first-child .stepNumber {
+  color: var(--c-gold);
+  -webkit-text-stroke: 0;
+}
+
+.stepTitle {
+  margin-top: var(--space-4);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.stepText {
+  max-width: 18rem;
+  margin-top: var(--space-2);
+  font-size: var(--fs-small);
+  line-height: 1.65;
+  color: var(--c-text-muted);
+  text-wrap: pretty;
+}
+
+@media (max-width: 860px) {
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+    padding-left: 4.5rem;
+  }
+
+  .steps::before {
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 1.6rem;
+    right: auto;
+    width: 1px;
+    height: auto;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--c-gold) 55%, transparent), var(--c-line) 90%);
+  }
+
+  .stepNumber {
+    position: absolute;
+    top: 0;
+    left: -4.5rem;
+    width: 3.25rem;
+    padding: 0.25rem 0;
+    font-size: 2.25rem;
+    text-align: center;
+  }
+
+  .stepTitle {
+    margin-top: 0.35rem;
+  }
+}
+
+/* --- Условия -----------------------------------------------------------------------------
+   Панель: слева заголовок и пометка о демо, справа пункты в две колонки.
+   Значение — крупно, пояснение — мелко под ним */
+.terms {
+  scroll-margin-top: var(--space-5);
+}
+
+.termsPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding: clamp(1.5rem, 3.5vw, 3rem);
+  border: 1px solid var(--c-line);
+  border-radius: calc(var(--radius-panel) * 1.25);
+  background:
+    radial-gradient(70% 100% at 0% 0%, rgb(201 134 64 / 0.1), transparent 60%),
+    var(--c-surface);
+}
+
+@media (max-width: 960px) {
+  .termsPanel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.demoNote {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding: 0.75rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--c-gold) 35%, transparent);
+  border-radius: var(--radius-chip);
+  background-color: rgb(216 182 132 / 0.06);
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--c-gold);
+}
+
+.demoNote svg {
+  flex: none;
+  margin-top: 0.15rem;
+}
+
+.termsList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(1.25rem, 3vw, 2.5rem);
+}
+
+@media (max-width: 560px) {
+  .termsList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.term {
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--c-line);
+}
+
+.termLabel {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.termValue {
+  margin-top: var(--space-1);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.termText {
+  margin-top: var(--space-2);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-text-soft);
+  text-wrap: pretty;
+}
+
+/* --- Подборка машин ----------------------------------------------------------------------- */
+.cars,
+.order {
+  scroll-margin-top: var(--space-5);
+}
+
+.carsHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-6);
+}
+
+.carsLead {
+  max-width: 34rem;
+  margin-top: var(--space-3);
+  font-size: var(--fs-ui);
+  line-height: 1.6;
+  color: var(--c-text-muted);
+}
+
+.carsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  margin-top: var(--space-5);
+}
+
+/* Планшет: три машины в ряд не помещаются, а одинокая третья во втором ряду
+   выглядит случайной — ряд становится лентой (третья карточка выглядывает
+   с края — видно, что листается): пальцем или
+   колесом, карточки встают по краю (scroll-snap). Прокручивается только
+   лента, не страница. Отступы сверху и снизу — место для рамки фокуса */
+@media (max-width: 1023px) and (min-width: 641px) {
+  .carsGrid {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: calc(46% - var(--space-2));
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-line-strong) transparent;
+    padding-block: var(--space-1) var(--space-3);
+  }
+
+  .carsGrid > li {
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .carsGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Строка «машина в форме заказа» — пустая, пока ничего не выбрано */
+.chosen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  min-height: 1.5rem;
+  margin-top: var(--space-4);
+  font-size: var(--fs-ui);
+  color: var(--c-text-soft);
+}
+
+.chosen .textLink {
+  color: var(--c-gold);
+}
+
+/* --- Вопросы ------------------------------------------------------------------------------ */
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: var(--space-6) clamp(2rem, 5.5vw, 6rem);
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .faq {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.faqNote {
+  max-width: 22rem;
+  margin-top: var(--space-4);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-text-muted);
+}
+
+/* --- Другие услуги -------------------------------------------------------------------------- */
+.related {
+  padding-bottom: var(--space-4);
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  margin-top: var(--space-5);
+}
+
+@media (max-width: 960px) {
+  .relatedGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.relatedGrid > li {
+  display: flex;
+}
+
+.relatedCard {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-panel);
+  background-color: var(--c-surface);
+  transition: border-color 260ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .relatedCard:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 35%, transparent);
+  }
+
+  .relatedCard:hover .relatedMedia img {
+    scale: 1.05;
+  }
+}
+
+.relatedMedia {
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background-color: var(--c-surface-raised);
+}
+
+.relatedMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 900ms var(--ease-out);
+}
+
+/* На телефоне и планшете — фото слева, текст справа: три карточки не
+   растягивают страницу тремя большими фото */
+@media (max-width: 960px) and (min-width: 561px) {
+  .relatedCard {
+    flex-direction: row;
+  }
+
+  .relatedMedia {
+    flex: 0 0 38%;
+    aspect-ratio: auto;
+  }
+}
+
+.relatedBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: clamp(1.125rem, 2vw, 1.5rem);
+}
+
+.relatedTitle {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.relatedLink {
+  border-radius: 0.25rem;
+  transition: color 200ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .relatedLink:hover {
+    color: var(--c-gold);
+  }
+}
+
+.relatedText {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-5);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-text-muted);
+  text-wrap: pretty;
+}
+
+.relatedButton {
+  align-self: flex-start;
+  margin-top: auto;
+}

@@ -1,0 +1,90 @@
+/* --- Кнопка «в избранное» -----------------------------------------------------
+   Выбранная машина — сердечко залито золотом: тот же акцент, что у
+   активного пункта меню и золотых кнопок */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  color: var(--c-text);
+  transition:
+    color 200ms var(--ease-soft),
+    border-color 200ms var(--ease-soft),
+    background-color 200ms var(--ease-soft);
+}
+
+.heart {
+  flex: none;
+  transition:
+    fill 200ms var(--ease-soft),
+    color 200ms var(--ease-soft);
+}
+
+.button[data-active] {
+  color: var(--c-gold);
+}
+
+.button[data-active] .heart {
+  fill: currentColor;
+}
+
+/* Круглая поверх фото — на лёгкой тёмной подложке: на светлом снимке
+   белая иконка без неё потерялась бы. 40px — удобная цель для пальца */
+.icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  background-color: rgb(2 7 11 / 0.45);
+  backdrop-filter: blur(6px);
+}
+
+/* С подписью — пилюля с кантом, как вторые действия сайта */
+.full {
+  height: 3.25rem;
+  padding-inline: 1.5rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-ui);
+  font-weight: 600;
+}
+
+.full[data-active] {
+  border-color: color-mix(in srgb, var(--c-gold) 45%, transparent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    color: var(--c-gold);
+  }
+
+  .full:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+  }
+}
+
+.button:active {
+  scale: 0.94;
+}
+
+/* «Подпрыгивание» при добавлении: короткий рост и возврат с перелётом —
+   отклик на действие. Без анимаций в системе — сердечко просто закрашивается */
+@media (prefers-reduced-motion: no-preference) {
+  .heart[data-pop] {
+    animation: pop 420ms var(--ease-out);
+  }
+}
+
+@keyframes pop {
+  0% {
+    scale: 1;
+  }
+  35% {
+    scale: 1.35;
+  }
+  65% {
+    scale: 0.92;
+  }
+  100% {
+    scale: 1;
+  }
+}

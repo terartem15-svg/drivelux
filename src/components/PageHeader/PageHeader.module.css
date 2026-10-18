@@ -1,0 +1,44 @@
+/* --- Шапка внутренней страницы ------------------------------------------------
+   Отступ сверху меньше, чем между секциями главной: под шапкой сайта нет
+   фото, и заголовок страницы должен быть виден сразу */
+.head {
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* --- Заголовок ------------------------------------------------------------------
+   Текст слева, своё содержимое страницы справа по нижней линии. Если места
+   не хватает, правая часть уходит под текст */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5) var(--space-7);
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+}
+
+.text {
+  max-width: 44rem;
+}
+
+.title {
+  font-size: clamp(2rem, 3.4vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.lead {
+  margin-top: var(--space-4);
+  max-width: 38rem;
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+  color: var(--c-text-soft);
+  text-wrap: pretty;
+}
+
+.aside {
+  flex: 1 1 20rem;
+  max-width: 28rem;
+}

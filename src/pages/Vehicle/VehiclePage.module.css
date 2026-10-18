@@ -1,0 +1,776 @@
+/* --- Страница машины ------------------------------------------------------------- */
+.page {
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* --- Первый экран: галерея и сводка ------------------------------------------------
+   Галерея шире сводки — фото здесь главное. ≤1023px сводка уходит под
+   галерею */
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(20rem, 1fr);
+  gap: clamp(1.5rem, 3.5vw, 3.5rem);
+  align-items: start;
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+}
+
+@media (max-width: 1023px) {
+  .top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --- Галерея --------------------------------------------------------------------------- */
+.gallery {
+  min-width: 0;
+}
+
+.stage {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background-color: var(--c-surface);
+  touch-action: pan-y;
+  user-select: none;
+}
+
+/* Кадры лежат стопкой, видимый — проявляется поверх предыдущего */
+.stagePhoto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 420ms var(--ease-soft);
+}
+
+.stagePhoto[data-active] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagePhoto {
+    transition: none;
+  }
+}
+
+.placeholder {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: rgb(216 182 132 / 0.28);
+  background:
+    radial-gradient(60% 22% at 50% 72%, rgb(255 228 190 / 0.07), transparent 70%),
+    radial-gradient(80% 60% at 50% 0%, rgb(201 134 64 / 0.16), transparent 70%),
+    linear-gradient(180deg, #0a0f15 0%, var(--c-surface) 100%);
+}
+
+/* Стрелки — круглые на тёмном стекле, по центру высоты кадра */
+.stageArrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-radius: var(--radius-full);
+  background-color: rgb(2 7 11 / 0.55);
+  backdrop-filter: blur(6px);
+  color: var(--c-text);
+  translate: 0 -50%;
+  transition:
+    border-color 200ms var(--ease-soft),
+    color 200ms var(--ease-soft);
+}
+
+.stagePrev {
+  left: var(--space-4);
+}
+
+.stageNext {
+  right: var(--space-4);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stageArrow:hover {
+    border-color: var(--c-gold);
+    color: var(--c-gold);
+  }
+}
+
+.stageArrow:active {
+  scale: 0.94;
+}
+
+.counter {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 1;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-full);
+  background-color: rgb(2 7 11 / 0.6);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-text-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Миниатюры: текущая — в золотой рамке, остальные приглушены */
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-chip);
+  opacity: 0.55;
+  transition:
+    opacity 200ms var(--ease-soft),
+    border-color 200ms var(--ease-soft);
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb[aria-current='true'] {
+  border-color: var(--c-gold);
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .thumb:hover {
+    opacity: 0.9;
+  }
+}
+
+.credit {
+  margin-top: var(--space-3);
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.credit a {
+  border-radius: 0.2rem;
+  color: var(--c-text-soft);
+  text-decoration: underline;
+  text-decoration-color: var(--c-line-strong);
+  text-underline-offset: 0.25em;
+}
+
+/* Плашка «Популярный» поверх кадра */
+.badge {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  background-color: rgb(2 7 11 / 0.6);
+  backdrop-filter: blur(6px);
+  font-size: var(--fs-small);
+  font-weight: 500;
+}
+
+/* --- Сводка ------------------------------------------------------------------------------
+   Марка с логотипом — тихая строка, модель — крупно, сердечко справа */
+.summary {
+  display: flex;
+  flex-direction: column;
+}
+
+.summaryHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-text-soft);
+}
+
+.brandLogo {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--c-gold);
+}
+
+.title {
+  margin-top: var(--space-2);
+  font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  margin-top: var(--space-3);
+  font-size: var(--fs-ui);
+  color: var(--c-text-muted);
+}
+
+/* Цена — самая крупная цифра сводки; «от» и «/ день» тише */
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-top: clamp(1.25rem, 2.4vw, 2rem);
+}
+
+.priceFrom,
+.priceUnit {
+  font-size: var(--fs-ui);
+  color: var(--c-text-muted);
+}
+
+.priceAmount {
+  font-size: clamp(2rem, 2.8vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Четыре главные цифры — в один ряд, иконка слева, подпись под значением */
+.keySpecs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-3);
+  margin-top: clamp(1.25rem, 2.4vw, 1.75rem);
+  padding-block: var(--space-4);
+  border-block: 1px solid var(--c-line);
+}
+
+@media (min-width: 1200px) {
+  .keySpecs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.keySpec {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.keySpecLabel {
+  display: inline-flex;
+  color: var(--c-gold);
+}
+
+.keySpecIcon {
+  display: inline-flex;
+  margin-top: 0.15rem;
+}
+
+.keySpecIcon svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.4;
+}
+
+.keySpecValue {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.keySpecUnit {
+  font-weight: 500;
+  color: var(--c-text-soft);
+}
+
+.keySpecCaption {
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--c-text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.book {
+  flex: 1.4 1 12rem;
+}
+
+.more {
+  flex: 1 1 8rem;
+}
+
+.freeCancel {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+}
+
+.freeCancel svg {
+  color: var(--c-gold);
+}
+
+/* --- Легенда и характеристики ----------------------------------------------------------- */
+.details {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+  margin-top: var(--section-space);
+  scroll-margin-top: calc(var(--header-height) + var(--space-5));
+}
+
+@media (max-width: 860px) {
+  .details {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.legend {
+  scroll-margin-top: calc(var(--header-height) + var(--space-5));
+}
+
+.eyebrow {
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.legendTitle {
+  margin-top: var(--space-3);
+  font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.legendAccent {
+  color: var(--c-gold);
+}
+
+.description {
+  max-width: 36rem;
+  margin-top: var(--space-4);
+  font-size: var(--fs-lead);
+  line-height: 1.7;
+  color: var(--c-text-soft);
+  text-wrap: pretty;
+}
+
+.traits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.trait {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.traitIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--c-surface-raised);
+  color: var(--c-gold);
+}
+
+.traitSoft {
+  display: block;
+  font-weight: 400;
+  color: var(--c-text-muted);
+}
+
+/* Общая панель: характеристики, условия, включено */
+.specsCard,
+.terms {
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-card);
+  background-color: var(--c-surface);
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.sectionTitle {
+  font-size: var(--fs-h2);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+/* Таблица характеристик — строки с тонкими линиями, значение справа */
+.specTable {
+  margin-top: var(--space-3);
+}
+
+.specRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: 0.7rem;
+  border-bottom: 1px solid var(--c-line);
+  font-size: var(--fs-ui);
+}
+
+.specRow:last-child {
+  border-bottom: 0;
+}
+
+.specRow dt {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--c-text-muted);
+}
+
+.specRow dt svg {
+  flex: none;
+  color: var(--c-gold);
+}
+
+.specRow dd {
+  font-weight: 500;
+  text-align: right;
+}
+
+/* --- Салон и условия аренды ------------------------------------------------------------
+   Слева фото салона именно этой машины, справа условия. Нет фото —
+   остаются одни условия на всю ширину */
+.cabin {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  margin-top: var(--section-space);
+  overflow: hidden;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-card);
+  background-color: var(--c-surface);
+}
+
+.cabinPlain {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 860px) {
+  .cabin {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.cabin .terms {
+  border: 0;
+  border-radius: 0;
+}
+
+.interior {
+  position: relative;
+  min-height: 18rem;
+  background-color: var(--c-surface-raised);
+}
+
+.interior img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Подпись автора — обязательна по лицензии; поверх фото на тёмной полосе */
+.interiorCredit {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: var(--space-5) var(--space-4) var(--space-3);
+  background: linear-gradient(180deg, transparent, rgb(2 7 11 / 0.85));
+  font-size: 0.75rem;
+  color: var(--c-text-soft);
+}
+
+.interiorCredit a {
+  text-decoration: underline;
+  text-decoration-color: var(--c-line-strong);
+  text-underline-offset: 0.25em;
+}
+
+.termsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-4);
+  margin-top: var(--space-5);
+}
+
+@media (max-width: 480px) {
+  .termsGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.cabinPlain .termsGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 860px) {
+  .cabinPlain .termsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.termLabel {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.termValue {
+  margin-top: var(--space-1);
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.termNote {
+  margin-top: 0.1rem;
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+}
+
+.demoNote {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding: 0.7rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--c-gold) 35%, transparent);
+  border-radius: var(--radius-chip);
+  background-color: rgb(216 182 132 / 0.06);
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--c-gold);
+}
+
+.demoNote svg {
+  flex: none;
+  margin-top: 0.15rem;
+}
+
+/* --- Что включено, опции и призыв -------------------------------------------------------- */
+.extras {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  margin-top: var(--space-5);
+  overflow: hidden;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-card);
+  background-color: var(--c-surface);
+}
+
+@media (max-width: 1023px) {
+  .extras {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.extrasLists {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+}
+
+@media (max-width: 600px) {
+  .extrasLists {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.checkList,
+.extraList {
+  margin-top: var(--space-4);
+}
+
+.checkList li,
+.extraList li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: 0.55rem;
+  font-size: var(--fs-ui);
+  color: var(--c-text-soft);
+}
+
+.checkIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  color: var(--c-gold);
+}
+
+.extraList li {
+  justify-content: space-between;
+  border-bottom: 1px solid var(--c-line);
+}
+
+.extraList li:last-child {
+  border-bottom: 0;
+}
+
+.extraPrice {
+  flex: none;
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.cta {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-end;
+  min-height: 15rem;
+  overflow: hidden;
+  border-left: 1px solid var(--c-line);
+}
+
+@media (max-width: 1023px) {
+  .cta {
+    border-top: 1px solid var(--c-line);
+    border-left: 0;
+  }
+}
+
+.ctaPhoto {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 50%;
+}
+
+.cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgb(2 7 11 / 0.92) 0%, rgb(2 7 11 / 0.55) 100%);
+}
+
+.ctaBody {
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+}
+
+.ctaTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.ctaText {
+  max-width: 20rem;
+  margin-block: var(--space-2) var(--space-4);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-text-soft);
+}
+
+/* --- Похожие ------------------------------------------------------------------------------------ */
+.similar {
+  margin-top: var(--section-space);
+}
+
+.similarHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+}
+
+.similarGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  margin-top: var(--space-5);
+}
+
+@media (max-width: 1023px) {
+  .similarGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Третья машина на планшете не помещается в ряд — не показываем её,
+     чтобы не оставлять одинокую карточку во втором ряду */
+  .similarGrid li:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .similarGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .similarGrid li:nth-child(3) {
+    display: block;
+  }
+}

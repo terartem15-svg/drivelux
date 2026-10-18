@@ -1,0 +1,259 @@
+/* --- Шапка ------------------------------------------------------------------
+   На внутренних страницах стоит в потоке над содержимым. На главной
+   (.overlay) лежит поверх фото первого экрана (position: absolute), без
+   фона: под ней ночной город, подложка его бы закрыла. Тонкая линия снизу —
+   во всю ширину экрана, как в референсе, а контент — в общей колонке
+   .container */
+.header {
+  position: relative;
+  z-index: var(--z-header);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0 0 auto;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  height: var(--header-height);
+}
+
+.brand {
+  flex: none;
+  border-radius: var(--radius-chip);
+}
+
+/* --- Меню --------------------------------------------------------------------
+   Стоит сразу за логотипом с крупным отступом — не по центру экрана. Меню
+   и его пункты растянуты на всю высоту шапки: выпадающая панель «Автопарка»
+   встаёт ровно под линией шапки, и курсор доходит до неё, не покидая пункт */
+.nav {
+  align-self: stretch;
+  margin-left: clamp(2rem, 4vw, 5rem);
+}
+
+.navList {
+  display: flex;
+  gap: clamp(1.1rem, 1.9vw, 2.25rem);
+  height: 100%;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+}
+
+.navLink {
+  position: relative;
+  display: inline-block;
+  padding-block: var(--space-2);
+  border-radius: 0.25rem;
+  font-size: clamp(0.875rem, 1.04vw, 0.9375rem);
+  font-weight: 500;
+  color: var(--c-text);
+  white-space: nowrap;
+  transition: color 200ms var(--ease-soft);
+}
+
+/* Активный пункт — золотой, с подчёркиванием-«стрелкой спидометра»: тонкая
+   линия на ширину слова и ромбик с мягким свечением по центру */
+.navLink[aria-current='page'] {
+  color: var(--c-gold);
+}
+
+.navLink[aria-current='page']::after,
+.navLink[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+}
+
+.navLink[aria-current='page']::after {
+  bottom: -0.2rem;
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--c-gold);
+  translate: -50% 0;
+}
+
+.navLink[aria-current='page']::before {
+  z-index: 1;
+  bottom: calc(-0.2rem - 2px);
+  width: 6px;
+  height: 6px;
+  background: var(--c-gold-light);
+  box-shadow: 0 0 8px 1px rgb(230 192 132 / 0.7);
+  translate: -50% 0;
+  rotate: 45deg;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .navLink:not([aria-current]):hover {
+    color: var(--c-gold);
+  }
+}
+
+/* --- Действия справа ------------------------------------------------------------ */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.25rem, 0.8vw, 0.75rem);
+  margin-left: auto;
+}
+
+.iconButton {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  color: var(--c-text);
+  transition: color 200ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .iconButton:hover {
+    color: var(--c-gold);
+  }
+}
+
+/* Избранное на своей странице — золотое, как активный пункт меню */
+.favorites[aria-current='page'] {
+  color: var(--c-gold);
+}
+
+/* Счётчик избранного — маленькая золотая капля на правом верхнем «лепестке»
+   сердечка. Обводка цвета фона отделяет её от иконки */
+.badge {
+  position: absolute;
+  top: 0.125rem;
+  right: 0;
+  display: grid;
+  place-items: center;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding-inline: 0.25rem;
+  border: 2px solid var(--c-night);
+  border-radius: var(--radius-full);
+  background: var(--gold-gradient);
+  color: var(--c-on-gold);
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Язык — сразу за поиском, как просили: настройка рядом с поиском, а не
+   между кнопками действий */
+.lang {
+  margin-right: var(--space-1);
+}
+
+/* Между иконками и «Войти» отступ больше, чем между самими иконками —
+   как в референсе: иконки и кнопки читаются двумя группами */
+.login {
+  margin-left: clamp(0.25rem, 0.6vw, 0.5rem);
+}
+
+.book {
+  margin-left: clamp(0.25rem, 0.9vw, 1rem);
+}
+
+/* Кнопка-бургер: видна только когда меню не помещается в строку */
+.menuButton {
+  display: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-left: var(--space-2);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  color: var(--c-text);
+}
+
+/* --- Адаптив -----------------------------------------------------------------
+   Язык теперь всегда рядом с поиском, поэтому место в строке экономит
+   «Войти»: на 1241–1400px (меню ещё в строку, на 1280 «Контакты» иначе
+   упирались бы в лупу) и на 641–900px (планшет) от кнопки остаётся
+   иконка. Подпись не удаляется, а прячется как .visually-hidden — для
+   скринридера кнопка по-прежнему «Войти» */
+@media (min-width: 1241px) and (max-width: 1400px), (max-width: 900px) {
+  .loginLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .actions .login {
+    width: 2.75rem;
+    padding-inline: 0;
+  }
+}
+
+/* ≤1240px пять пунктов меню и кнопки в строку уже не помещаются (проверено
+   скриншотами на 1250 и 1280): меню уходит за бургер — он открывает
+   мобильное меню. Поиск, язык и избранное остаются в шапке на любой ширине */
+@media (max-width: 1240px) {
+  .nav {
+    display: none;
+  }
+
+  .menuButton {
+    display: inline-grid;
+  }
+}
+
+/* ≤760px «Забронировать» уходит в мобильное меню — иначе шапка планшета
+   в вертикали не помещается в строку */
+@media (max-width: 760px) {
+  .actions .book {
+    display: none;
+  }
+}
+
+/* На телефоне «Войти» и «Забронировать» уходят в мобильное меню: в строке
+   остаются логотип, поиск, язык, избранное и бургер. Селекторы через
+   .actions — чтобы гарантированно перебить display у кнопок из
+   Button.module.css независимо от порядка CSS в сборке */
+@media (max-width: 640px) {
+  .actions .login,
+  .actions .book {
+    display: none;
+  }
+
+  .actions {
+    gap: 0.15rem;
+  }
+
+  .menuButton {
+    margin-left: var(--space-1);
+  }
+}
+
+/* Узкие телефоны (до 400px): подпись под логотипом и лишние отступы
+   прячутся, чтобы логотип, кнопки и бургер встали в одну строку. На самых
+   узких (до 340px) уходит ещё и сердечко — избранное есть в мобильном меню */
+@media (max-width: 400px) {
+  .brand :global(.logo-tagline) {
+    display: none;
+  }
+
+  .iconButton {
+    width: 2.25rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .actions .favorites {
+    display: none;
+  }
+}

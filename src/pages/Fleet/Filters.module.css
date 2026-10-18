@@ -1,0 +1,416 @@
+/* --- Панель фильтров -----------------------------------------------------------------
+   Группы разделены тонкими линиями, как строки характеристик в карточках.
+   Заголовок группы — белый и плотный, варианты — приглушённые: глаз
+   сначала находит группу, потом вариант */
+.panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.group {
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-5) 0;
+  border: 0;
+  border-top: 1px solid var(--c-line);
+}
+
+.group:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* legend по умолчанию «врезается» в рамку fieldset — делаем его обычным
+   блоком над вариантами */
+.legend {
+  float: left;
+  width: 100%;
+  margin-bottom: var(--space-3);
+  padding: 0;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.legend + * {
+  clear: both;
+}
+
+/* --- Список с флажками ---------------------------------------------------------------- */
+.options {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.option,
+.switchRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 2.25rem;
+  border-radius: var(--radius-chip);
+  font-size: var(--fs-ui);
+  color: var(--c-text-soft);
+  cursor: pointer;
+  transition: color 200ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option:hover,
+  .switchRow:hover {
+    color: var(--c-text);
+  }
+}
+
+.optionLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+/* «Все марки» / «Свернуть» — тихая текстовая кнопка под списком */
+.more {
+  margin-top: var(--space-2);
+  padding: var(--space-1) 0;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-gold);
+  text-decoration: underline;
+  text-decoration-color: rgb(216 182 132 / 0.4);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 200ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .more:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* Число машин — тусклее подписи, цифры одной ширины: столбик ровный */
+.count {
+  flex: none;
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Вариант, при котором машин не останется, — приглушён */
+.option[data-empty],
+.pill[data-empty],
+.switchRow[data-empty] {
+  opacity: 0.4;
+}
+
+/* Флажок: квадрат со скруглением, отмеченный — золотой с тёмной галочкой.
+   Галочка нарисована маской: цвет берётся из currentColor */
+.checkbox {
+  appearance: none;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0;
+  border: 1px solid var(--c-line-strong);
+  border-radius: 0.3rem;
+  background-color: var(--c-surface-raised);
+  cursor: pointer;
+  transition:
+    background-color 160ms var(--ease-soft),
+    border-color 160ms var(--ease-soft);
+}
+
+.checkbox::after {
+  content: '';
+  width: 0.7rem;
+  height: 0.7rem;
+  background-color: var(--c-on-gold);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  scale: 0.4;
+  opacity: 0;
+  transition:
+    scale 180ms var(--ease-out),
+    opacity 120ms var(--ease-soft);
+}
+
+.checkbox:checked {
+  border-color: var(--c-gold);
+  background: var(--gold-gradient);
+}
+
+.checkbox:checked::after {
+  scale: 1;
+  opacity: 1;
+}
+
+.option:has(.checkbox:checked) {
+  color: var(--c-text);
+}
+
+/* --- «Таблетки» ---------------------------------------------------------------------
+   Флажок спрятан, но остаётся в разметке и в фокусе: таблетка — его подпись.
+   Выбранная — с золотым кантом и золотым текстом */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.25rem;
+  padding: 0 0.85rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+  cursor: pointer;
+  transition:
+    color 200ms var(--ease-soft),
+    border-color 200ms var(--ease-soft),
+    background-color 200ms var(--ease-soft);
+}
+
+.pill .optionLabel {
+  flex: none;
+}
+
+.pillInput {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pill:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 45%, transparent);
+    color: var(--c-text);
+  }
+}
+
+.pill:has(.pillInput:checked) {
+  border-color: var(--c-gold);
+  background-color: rgb(216 182 132 / 0.08);
+  color: var(--c-gold);
+}
+
+.pill:has(.pillInput:checked) .count {
+  color: color-mix(in srgb, var(--c-gold) 70%, transparent);
+}
+
+.pill:has(.pillInput:focus-visible) {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 3px;
+}
+
+/* --- Переключатель «Только полный привод» ------------------------------------------------ */
+.switch {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 2.5rem;
+  height: 1.4rem;
+  margin: 0;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--c-surface-raised);
+  cursor: pointer;
+  transition:
+    background-color 200ms var(--ease-soft),
+    border-color 200ms var(--ease-soft);
+}
+
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0.2rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: var(--radius-full);
+  background-color: var(--c-text-muted);
+  translate: 0 -50%;
+  transition:
+    translate 220ms var(--ease-out),
+    background-color 200ms var(--ease-soft);
+}
+
+.switch:checked {
+  border-color: var(--c-gold);
+  background-color: rgb(216 182 132 / 0.18);
+}
+
+.switch:checked::after {
+  background-color: var(--c-gold-light);
+  translate: 1.05rem -50%;
+}
+
+/* --- Диапазон ----------------------------------------------------------------------------
+   Дорожка — тонкая линия, между бегунками — золото. Бегунок — ромб, как
+   «стрелка спидометра» под активным пунктом меню: тот же знак сайта */
+.range {
+  display: grid;
+  gap: var(--space-4);
+  padding-top: var(--space-1);
+}
+
+.slider {
+  position: relative;
+  height: 1.5rem;
+}
+
+.slider::before,
+.slider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  border-radius: 1px;
+  translate: 0 -50%;
+  pointer-events: none;
+}
+
+/* Центр бегунка в крайнем положении отстоит от края на половину бегунка
+   (0.5rem) — дорожка и золотая полоса начинаются там же, иначе полоса
+   торчала бы из-под бегунка. --from и --to — доли от 0 до 1 */
+.slider::before {
+  inset-inline: 0.5rem;
+  background-color: var(--c-line-strong);
+}
+
+.slider::after {
+  left: calc(0.5rem + (100% - 1rem) * var(--from));
+  right: calc(0.5rem + (100% - 1rem) * (1 - var(--to)));
+  background: var(--c-gold);
+  box-shadow: 0 0 10px rgb(230 192 132 / 0.35);
+}
+
+/* Два <input type="range"> друг на друге: сами дорожки прозрачны и не
+   ловят нажатия, нажимаются только бегунки */
+.thumb {
+  appearance: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.thumb[data-top] {
+  z-index: 2;
+}
+
+.thumb::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+
+.thumb::-moz-range-track {
+  background: transparent;
+}
+
+.thumb::-webkit-slider-thumb {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.25rem;
+  border: 2px solid var(--c-night);
+  border-radius: 0.2rem;
+  background: var(--gold-gradient);
+  box-shadow: 0 0 0 1px var(--c-gold), 0 0 10px 1px rgb(230 192 132 / 0.45);
+  rotate: 45deg;
+  cursor: grab;
+  pointer-events: auto;
+  transition: scale 160ms var(--ease-out);
+}
+
+.thumb::-moz-range-thumb {
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 2px solid var(--c-night);
+  border-radius: 0.2rem;
+  background: var(--gold-gradient);
+  box-shadow: 0 0 0 1px var(--c-gold), 0 0 10px 1px rgb(230 192 132 / 0.45);
+  rotate: 45deg;
+  cursor: grab;
+  pointer-events: auto;
+}
+
+.thumb:active::-webkit-slider-thumb {
+  scale: 1.15;
+  cursor: grabbing;
+}
+
+.thumb:focus-visible {
+  outline: none;
+}
+
+.thumb:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 3px;
+}
+
+.thumb:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 3px;
+}
+
+/* Поля «от» и «до» — под ползунком, в строку */
+.rangeInputs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.rangeDash {
+  color: var(--c-text-muted);
+}
+
+.numberField {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  height: 2.5rem;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-chip);
+  background-color: var(--c-surface-raised);
+  transition: border-color 200ms var(--ease-soft);
+}
+
+.numberField:focus-within {
+  border-color: var(--c-gold);
+}
+
+.numberLabel {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+/* Поле 16px — iOS не приближает страницу при фокусе */
+.number {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.number:focus-visible {
+  outline: none;
+}

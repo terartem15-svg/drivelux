@@ -1,0 +1,586 @@
+/* --- Панель поиска -------------------------------------------------------------
+   Тёмное «стекло» поверх нижнего края фото: полупрозрачный фон с размытием и
+   светлый кант. Колонки по референсу: два поля поездки чуть шире класса авто,
+   кнопка — по ширине содержимого. Каждое поле — ячейка (.slot) с кнопкой и
+   её выпадающим блоком */
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, 0.95fr) auto;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background-color: rgb(8 13 19 / 0.78);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  /* При переходе по якорю «Забронировать» панель встаёт не вплотную к
+     краю экрана, а с отступом — над ней видно конец первого экрана */
+  scroll-margin-top: var(--space-8);
+}
+
+.slot {
+  position: relative;
+  min-width: 0;
+}
+
+/* --- Поле ------------------------------------------------------------------------ */
+.field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  padding: clamp(0.875rem, 1.2vw, 1.25rem) clamp(1rem, 1.6vw, 1.5rem) clamp(0.875rem, 1.2vw, 1.25rem)
+    clamp(1rem, 2.2vw, 2rem);
+  text-align: left;
+  border-radius: var(--radius-panel);
+  transition: background-color 200ms var(--ease-soft);
+}
+
+/* Вертикальные разделители между колонками — с отступом от краёв панели,
+   как в референсе: линия не касается канта */
+.slot + .slot::before,
+.submit::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 1.1rem auto 1.1rem 0;
+  width: 1px;
+  background: var(--c-line);
+}
+
+/* Рамка фокуса — внутри поля: снаружи она легла бы поверх канта панели */
+.field:focus-visible {
+  outline-offset: -2px;
+}
+
+.field[aria-expanded='true'] {
+  background-color: rgb(255 255 255 / 0.04);
+}
+
+.field[aria-expanded='true'] .chevron {
+  rotate: 180deg;
+  color: var(--c-gold);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .field:hover {
+    background-color: rgb(255 255 255 / 0.03);
+  }
+
+  .field:hover .chevron {
+    color: var(--c-gold);
+  }
+}
+
+/* Кружок с иконкой: заливка чуть светлее панели, иконка белая — золото на
+   странице только у действий и акцентов */
+.icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-full);
+  background-color: var(--c-surface-raised);
+  color: var(--c-text);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.value {
+  overflow: hidden;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--c-text);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.metaDivider {
+  width: 1px;
+  height: 0.75rem;
+  background: var(--c-line-strong);
+}
+
+.chevron {
+  flex: none;
+  color: var(--c-text-soft);
+  transition:
+    color 200ms var(--ease-soft),
+    rotate 240ms var(--ease-out);
+}
+
+/* --- Кнопка --------------------------------------------------------------------- */
+.submit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-inline: clamp(1rem, 2vw, 1.75rem);
+}
+
+.submitButton {
+  min-width: clamp(10rem, 15vw, 13.5rem);
+}
+
+/* --- Выпадающий блок -----------------------------------------------------------------
+   Карточка под полем, тёмная и непрозрачная: под ней — фото и следующая
+   секция, их текст не должен просвечивать сквозь список мест. Блоки поездки широкие (места + календарь), блок класса —
+   по ширине поля. У возврата карточка выровнена по правому краю поля — на
+   планшете поле стоит в правой колонке, и карточка не уходит за экран */
+.popover {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.6rem);
+  left: 0;
+  width: max(100%, 20rem);
+  padding: var(--space-4);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background-color: var(--c-surface);
+  box-shadow: 0 30px 70px -28px rgb(0 0 0 / 0.95);
+  outline: none;
+}
+
+.popover[data-wide] {
+  width: min(44rem, 100vw - 2 * var(--page-gutter));
+}
+
+.popover[data-align='end'] {
+  right: 0;
+  left: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .popover {
+    animation: popover-in 220ms var(--ease-out);
+  }
+}
+
+@keyframes popover-in {
+  from {
+    opacity: 0;
+    translate: 0 -0.4rem;
+  }
+}
+
+/* На телефоне — шторка снизу экрана поверх затемнения */
+.sheetBackdrop {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  background-color: rgb(2 7 11 / 0.72);
+}
+
+.sheet {
+  position: fixed;
+  z-index: 61;
+  inset: auto 0 0;
+  max-height: 88dvh;
+  padding: 0 var(--space-4) max(var(--space-4), env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-top: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  background-color: var(--c-surface);
+  outline: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sheet {
+    animation: sheet-in 300ms var(--ease-out);
+  }
+
+  .sheetBackdrop {
+    animation: fade-in 260ms var(--ease-soft);
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    translate: 0 100%;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.sheetHead {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-inline: calc(-1 * var(--space-4));
+  margin-bottom: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--c-line);
+  background-color: var(--c-surface);
+}
+
+.sheetTitle {
+  font-weight: 600;
+}
+
+.sheetClose {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  color: var(--c-text-soft);
+}
+
+/* --- Список классов ------------------------------------------------------------------- */
+.options {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-chip);
+  text-align: left;
+  transition: background-color 140ms var(--ease-soft);
+}
+
+.option[aria-pressed='true'] {
+  background-color: rgb(216 182 132 / 0.08);
+}
+
+.option:focus-visible {
+  outline-offset: -2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option:hover {
+    background-color: rgb(255 255 255 / 0.05);
+  }
+}
+
+.optionText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.optionTitle {
+  font-size: var(--fs-ui);
+  font-weight: 600;
+}
+
+.optionNote {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.optionCount {
+  flex: none;
+  font-size: 0.75rem;
+  color: var(--c-text-soft);
+}
+
+.optionCheck {
+  flex: none;
+  color: var(--c-gold);
+}
+
+/* --- Места, даты и время -------------------------------------------------------------- */
+.editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+.editorTitle {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.places {
+  min-width: 0;
+}
+
+/* Список мест прокручивается сам — календарь справа остаётся на месте */
+.placeGroups {
+  display: grid;
+  gap: var(--space-3);
+  max-height: 22rem;
+  margin-right: calc(-1 * var(--space-2));
+  padding-right: var(--space-2);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.15) transparent;
+}
+
+.groupLabel {
+  margin-bottom: 0.2rem;
+  padding-left: 0.6rem;
+  font-size: 0.75rem;
+  color: var(--c-gold);
+}
+
+.placeList {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.place {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--radius-chip);
+  text-align: left;
+  transition: background-color 140ms var(--ease-soft);
+}
+
+.place[aria-pressed='true'] {
+  background-color: rgb(216 182 132 / 0.08);
+}
+
+.place:focus-visible {
+  outline-offset: -2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .place:hover {
+    background-color: rgb(255 255 255 / 0.05);
+  }
+}
+
+.placeIcon {
+  flex: none;
+  color: var(--c-text-muted);
+}
+
+.place[aria-pressed='true'] .placeIcon {
+  color: var(--c-gold);
+}
+
+.placeText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.placeName {
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+.placeNote {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.same {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding: 0.7rem 0.75rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-chip);
+  font-size: var(--fs-small);
+  cursor: pointer;
+}
+
+.same input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--c-gold);
+}
+
+.sameNote {
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+}
+
+.when {
+  min-width: 0;
+  padding-left: var(--space-5);
+  border-left: 1px solid var(--c-line);
+}
+
+.timeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.timeRow .editorTitle {
+  margin-bottom: 0;
+}
+
+.timeSelect {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.timeSelect select {
+  height: 2.5rem;
+  padding: 0 2.25rem 0 0.9rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--c-night);
+  font: inherit;
+  font-size: var(--fs-ui);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text);
+  appearance: none;
+  cursor: pointer;
+}
+
+.timeSelect select:focus-visible {
+  outline: none;
+  border-color: var(--c-gold);
+}
+
+.timeSelect svg {
+  position: absolute;
+  right: 0.75rem;
+  color: var(--c-text-muted);
+  pointer-events: none;
+}
+
+.editorFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--c-line);
+}
+
+.duration {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.durationDays {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-gold);
+}
+
+/* --- Адаптив -----------------------------------------------------------------
+   ≤1100px — сетка 2×2: поездка в первой строке, класс и кнопка во второй.
+   Разделители перестраиваются под сетку: вертикальный только между
+   колонками, горизонтальный — между строками */
+@media (max-width: 1100px) {
+  .panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .slot:nth-child(3)::before {
+    display: none;
+  }
+
+  .slot:nth-child(3),
+  .submit {
+    border-top: 1px solid var(--c-line);
+  }
+
+  .slot:nth-child(3) .field {
+    border-radius: 0 0 0 var(--radius-panel);
+  }
+
+  .submit {
+    padding-block: var(--space-4);
+  }
+
+  .submitButton {
+    width: 100%;
+  }
+}
+
+/* ≤760px — места и календарь в выпадающем блоке встают друг под друга */
+@media (max-width: 760px) {
+  .editor {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .when {
+    padding-left: 0;
+    padding-top: var(--space-4);
+    border-left: 0;
+    border-top: 1px solid var(--c-line);
+  }
+
+  .placeGroups {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+/* ≤640px — всё в одну колонку, разделители только горизонтальные */
+@media (max-width: 640px) {
+  .panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .slot + .slot::before,
+  .submit::before {
+    display: none;
+  }
+
+  .slot + .slot {
+    border-top: 1px solid var(--c-line);
+  }
+
+  .slot + .slot .field,
+  .slot:nth-child(3) .field {
+    border-radius: 0;
+  }
+
+  .submit {
+    padding: var(--space-4);
+  }
+}

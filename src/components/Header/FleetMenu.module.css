@@ -1,0 +1,361 @@
+/* --- Пункт «Автопарк» -------------------------------------------------------------
+   Пункт растянут на всю высоту шапки: курсор идёт от слова прямо вниз в
+   панель и ни на миг не покидает пункт. Сама панель позиционируется от
+   шапки (у пункта нет position), поэтому встаёт ровно под её нижней линией */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  height: 100%;
+}
+
+/* Стрелка-кнопка рядом со словом: для клавиатуры и касания. Мышью панель
+   открывается наведением, стрелка лишь подсказывает, что она есть */
+.toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: -0.35rem;
+  border-radius: var(--radius-full);
+  color: var(--c-text-muted);
+  transition:
+    color 200ms var(--ease-soft),
+    rotate 220ms var(--ease-out);
+}
+
+.toggle[aria-expanded='true'] {
+  rotate: 180deg;
+  color: var(--c-gold);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover .toggle {
+    color: var(--c-gold);
+  }
+}
+
+/* --- Панель ----------------------------------------------------------------------
+   Компактная карточка по центру под шапкой — не на всю ширину и не на весь
+   экран. Закрытая — невидима и не ловит курсор; открытие — короткое
+   проявление со сдвигом вниз, закрытие — то же в обратную сторону */
+.panel {
+  position: absolute;
+  z-index: 40;
+  top: 100%;
+  left: 50%;
+  width: min(62rem, 100% - 2 * var(--page-gutter));
+  padding-top: 0.5rem;
+  translate: -50% -0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 200ms var(--ease-soft),
+    translate 240ms var(--ease-out),
+    visibility 0s linear 240ms;
+}
+
+.panel[data-open] {
+  translate: -50% 0;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 220ms var(--ease-soft),
+    translate 280ms var(--ease-out),
+    visibility 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .panel[data-open] {
+    translate: -50% 0;
+    transition: none;
+  }
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 13.5rem minmax(0, 1fr) 20.5rem;
+  grid-template-areas:
+    'classes preview side'
+    'all all all';
+  overflow: hidden;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background-color: rgb(8 13 19 / 0.97);
+  box-shadow: 0 30px 70px -30px rgb(0 0 0 / 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.heading {
+  margin-bottom: var(--space-3);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.headingNote {
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-weight: 500;
+}
+
+/* --- Классы ------------------------------------------------------------------------ */
+.classes {
+  grid-area: classes;
+  padding: var(--space-5) var(--space-3) var(--space-5) var(--space-5);
+  border-right: 1px solid var(--c-line);
+}
+
+.classList {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.classLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--radius-chip);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-text-soft);
+  transition:
+    background-color 160ms var(--ease-soft),
+    color 160ms var(--ease-soft);
+}
+
+.classLink[data-active] {
+  background-color: rgb(255 255 255 / 0.05);
+  color: var(--c-text);
+}
+
+.classLink[data-active] .classCount {
+  border-color: color-mix(in srgb, var(--c-gold) 50%, transparent);
+  color: var(--c-gold);
+}
+
+.classLink:focus-visible {
+  outline-offset: -2px;
+}
+
+.classCount {
+  display: grid;
+  place-items: center;
+  min-width: 1.6rem;
+  height: 1.35rem;
+  padding-inline: 0.35rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: 0.6875rem;
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Превью ------------------------------------------------------------------------ */
+.preview {
+  grid-area: preview;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5);
+}
+
+.cars {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .carItem {
+    animation: card-in 320ms var(--ease-out) backwards;
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    translate: 0 0.4rem;
+  }
+}
+
+.car {
+  display: grid;
+  gap: 0.2rem;
+  border-radius: var(--radius-chip);
+}
+
+.carPhoto {
+  display: block;
+  aspect-ratio: 3 / 2;
+  margin-bottom: 0.45rem;
+  overflow: hidden;
+  border-radius: var(--radius-chip);
+  background-color: var(--c-surface-raised);
+}
+
+.carPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 500ms var(--ease-out);
+}
+
+.carName {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.carPrice {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .car:hover .carPhoto img {
+    scale: 1.05;
+  }
+
+  .car:hover .carName {
+    color: var(--c-gold);
+  }
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-radius: 0.25rem;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-gold);
+}
+
+/* --- Марки и быстрый подбор ---------------------------------------------------------- */
+.side {
+  grid-area: side;
+  padding: var(--space-5);
+  border-left: 1px solid var(--c-line);
+}
+
+.brands {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.1rem var(--space-2);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.3rem 0.4rem;
+  border-radius: var(--radius-chip);
+  font-size: 0.8125rem;
+  color: var(--c-text-soft);
+  transition:
+    color 160ms var(--ease-soft),
+    background-color 160ms var(--ease-soft);
+}
+
+.brandLogo {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--c-text-muted);
+  transition: color 160ms var(--ease-soft);
+}
+
+.brandLogo svg {
+  width: 100%;
+  height: 100%;
+}
+
+.brandName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .brand:hover {
+    background-color: rgb(255 255 255 / 0.04);
+    color: var(--c-text);
+  }
+
+  .brand:hover .brandLogo {
+    color: var(--c-gold);
+  }
+}
+
+.picksHeading {
+  margin-top: var(--space-5);
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.pick {
+  display: inline-flex;
+  align-items: center;
+  height: 1.9rem;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  color: var(--c-text-soft);
+  transition:
+    border-color 160ms var(--ease-soft),
+    color 160ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pick:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 55%, transparent);
+    color: var(--c-gold);
+  }
+}
+
+/* --- Весь автопарк ------------------------------------------------------------------- */
+.all {
+  grid-area: all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.85rem;
+  border-top: 1px solid var(--c-line);
+  background-color: rgb(255 255 255 / 0.02);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-text);
+  transition:
+    color 160ms var(--ease-soft),
+    background-color 160ms var(--ease-soft);
+}
+
+.all:focus-visible {
+  outline-offset: -3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .all:hover {
+    background-color: rgb(216 182 132 / 0.08);
+    color: var(--c-gold);
+  }
+}

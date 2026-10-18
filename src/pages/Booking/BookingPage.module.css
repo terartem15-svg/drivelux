@@ -1,0 +1,1184 @@
+.body {
+  padding-top: clamp(1.25rem, 2.4vw, 2rem);
+}
+
+/* --- Гарантии под заголовком ----------------------------------------------------------
+   Строка из четырёх обещаний — коротко и с иконками, до начала формы */
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+  margin-top: var(--space-5);
+  padding-block: var(--space-4);
+  border-block: 1px solid var(--c-line);
+}
+
+.trust li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-text-soft);
+}
+
+.trust svg {
+  color: var(--c-gold);
+}
+
+/* --- Две колонки: форма и смета ---------------------------------------------------------
+   Смета справа липнет к верху экрана — итог виден, пока заполняешь форму.
+   ≤1023px смета встаёт над формой: сначала видно, что бронируешь */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(19rem, 25rem);
+  gap: clamp(1.5rem, 3.5vw, 3.5rem);
+  align-items: start;
+}
+
+/* --- Форма и шаги -------------------------------------------------------------------- */
+.form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.step {
+  position: relative;
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-panel);
+  background-color: var(--c-surface);
+}
+
+.stepHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.stepNumber {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-full);
+  background: var(--gold-gradient);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--c-on-gold);
+}
+
+.stepTitle {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+.stepBody {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.field {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  min-width: 0;
+}
+
+.label {
+  padding: 0;
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.optional {
+  opacity: 0.8;
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+/* Поля — графит потемнее подложки, кант теплеет при фокусе. 16px — iOS не
+   приближает страницу при фокусе */
+.control {
+  width: 100%;
+  height: 3rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-chip);
+  background-color: var(--c-night);
+  font: inherit;
+  font-size: 1rem;
+  color: var(--c-text);
+  transition: border-color 200ms var(--ease-soft);
+}
+
+.control::placeholder {
+  color: rgb(138 142 149 / 0.7);
+}
+
+.control:focus-visible {
+  outline: none;
+  border-color: var(--c-gold);
+}
+
+.control[aria-invalid] {
+  border-color: #c2665a;
+}
+
+.control:disabled {
+  opacity: 0.6;
+}
+
+.textarea {
+  height: auto;
+  min-height: 5.5rem;
+  padding-block: var(--space-3);
+  resize: vertical;
+}
+
+.selectBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.selectBox .control {
+  padding-right: 2.5rem;
+  appearance: none;
+  cursor: pointer;
+}
+
+.selectBox svg {
+  position: absolute;
+  right: 0.9rem;
+  color: var(--c-text-muted);
+  pointer-events: none;
+}
+
+.error {
+  font-size: 0.8125rem;
+  color: #e08a7e;
+}
+
+.inlineLink {
+  border-radius: 0.25rem;
+  font-weight: 600;
+  color: var(--c-gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- Шаг 1: машина ------------------------------------------------------------------ */
+.carStep {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.carCard {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr) auto;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.carPhoto {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: var(--radius-chip);
+  background-color: var(--c-surface-raised);
+  color: rgb(216 182 132 / 0.3);
+}
+
+.carPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carClass {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.carName {
+  margin-top: 0.15rem;
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+.carSpecs {
+  margin-top: 0.2rem;
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+}
+
+.carPrice {
+  margin-top: var(--space-2);
+  font-weight: 700;
+  color: var(--c-gold);
+}
+
+.carPrice span {
+  font-weight: 400;
+  color: var(--c-text-muted);
+}
+
+.carChevron {
+  margin-left: 0.35rem;
+  vertical-align: -0.2em;
+  transition: rotate 220ms var(--ease-out);
+}
+
+.carChevron[data-open] {
+  rotate: 180deg;
+}
+
+.noCar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 1px dashed var(--c-line-strong);
+  border-radius: var(--radius-chip);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+}
+
+.noCar[data-error] {
+  border-color: #c2665a;
+  color: #e08a7e;
+}
+
+.noCar:focus {
+  outline: none;
+}
+
+/* Витрина машин: чипы классов и сетка мини-карточек */
+.picker {
+  display: grid;
+  gap: var(--space-3);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .picker {
+    animation: picker-in 260ms var(--ease-out);
+  }
+}
+
+@keyframes picker-in {
+  from {
+    opacity: 0;
+    translate: 0 -0.4rem;
+  }
+}
+
+.pickerFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pickerChip {
+  height: 2.1rem;
+  padding-inline: 0.85rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  font-size: 0.8125rem;
+  color: var(--c-text-soft);
+  transition:
+    border-color 160ms var(--ease-soft),
+    color 160ms var(--ease-soft),
+    background-color 160ms var(--ease-soft);
+}
+
+.pickerChip[aria-pressed='true'] {
+  border-color: transparent;
+  background: var(--gold-gradient);
+  color: var(--c-on-gold);
+}
+
+.pickerList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  gap: var(--space-3);
+  max-height: 26rem;
+  padding: 0.15rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.15) transparent;
+}
+
+.pickerCar {
+  display: grid;
+  gap: 0.15rem;
+  width: 100%;
+  padding: 0.4rem 0.4rem 0.6rem;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-card);
+  text-align: left;
+  transition:
+    border-color 160ms var(--ease-soft),
+    background-color 160ms var(--ease-soft);
+}
+
+.pickerCar[aria-pressed='true'] {
+  border-color: var(--c-gold);
+  background-color: rgb(216 182 132 / 0.06);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pickerCar:hover {
+    border-color: color-mix(in srgb, var(--c-gold) 50%, transparent);
+  }
+}
+
+.pickerCar:focus-visible {
+  outline-offset: 1px;
+}
+
+.pickerPhoto {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 2;
+  margin-bottom: 0.35rem;
+  overflow: hidden;
+  border-radius: var(--radius-chip);
+  background-color: var(--c-surface-raised);
+}
+
+.pickerPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pickerCheck {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radius-full);
+  background: var(--gold-gradient);
+  color: var(--c-on-gold);
+}
+
+.pickerName {
+  padding-inline: 0.2rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.pickerPrice {
+  padding-inline: 0.2rem;
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+/* --- Шаг 2: даты ------------------------------------------------------------------------ */
+.dates {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.dateTabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.dateTab {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.7rem var(--space-4);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-chip);
+  text-align: left;
+  transition:
+    border-color 160ms var(--ease-soft),
+    background-color 160ms var(--ease-soft);
+}
+
+.dateTab[aria-pressed='true'] {
+  border-color: var(--c-gold);
+  background-color: rgb(216 182 132 / 0.06);
+}
+
+.dateTabLabel {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.dateTabValue {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.dateBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 13rem);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.times {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.longTerm {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.65rem var(--space-4);
+  border-radius: var(--radius-chip);
+  background-color: rgb(255 255 255 / 0.03);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+}
+
+.longTerm:empty {
+  display: none;
+}
+
+.longTerm svg {
+  flex: none;
+  color: var(--c-gold);
+}
+
+.longTerm[data-active] {
+  background-color: rgb(216 182 132 / 0.1);
+  color: var(--c-gold);
+}
+
+/* --- Шаг 3: защита ------------------------------------------------------------------------ */
+.protections {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.protection {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  transition:
+    border-color 180ms var(--ease-soft),
+    background-color 180ms var(--ease-soft);
+}
+
+.protection[data-checked] {
+  border-color: var(--c-gold);
+  background-color: rgb(216 182 132 / 0.06);
+}
+
+/* Сама радиокнопка — невидимая, но в фокусе обводит всю карточку */
+.protection input,
+.payment input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.protection:has(input:focus-visible),
+.payment:has(input:focus-visible),
+.extra:has(input:focus-visible) {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 3px;
+}
+
+.recommended {
+  position: absolute;
+  top: -0.65rem;
+  right: var(--space-3);
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-full);
+  background: var(--gold-gradient);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-on-gold);
+}
+
+.protectionHead {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.protectionTitle {
+  font-weight: 700;
+}
+
+.protectionPrice {
+  font-size: var(--fs-small);
+  color: var(--c-gold);
+}
+
+.protectionPoints {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  color: var(--c-text-soft);
+}
+
+.protectionPoints li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
+.protectionPoints svg {
+  flex: none;
+  margin-top: 0.2rem;
+  color: var(--c-gold);
+}
+
+/* --- Шаг 4: опции -------------------------------------------------------------------------- */
+.extras {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.extra {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  transition:
+    border-color 180ms var(--ease-soft),
+    background-color 180ms var(--ease-soft);
+}
+
+.extra[data-checked] {
+  border-color: var(--c-gold);
+  background-color: rgb(216 182 132 / 0.06);
+}
+
+.extraMain {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+}
+
+.extraMain input {
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
+  accent-color: var(--c-gold);
+}
+
+.extraIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+  background-color: var(--c-surface-raised);
+  color: var(--c-gold);
+}
+
+.extraText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.extraTitle {
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+.extraNote {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.extraPrice {
+  flex: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--c-text-soft);
+  text-align: right;
+}
+
+.extraPrice[data-free] {
+  color: var(--c-gold);
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  justify-self: end;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepper button {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-full);
+  color: var(--c-text);
+}
+
+.stepper button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* --- Шаг 5: контакты ------------------------------------------------------------------------ */
+.account {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: 0.65rem var(--space-4);
+  border-radius: var(--radius-chip);
+  background-color: rgb(255 255 255 / 0.03);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+}
+
+.account svg {
+  flex: none;
+  margin-top: 0.15rem;
+  color: var(--c-gold);
+}
+
+/* --- Шаг 6: оплата ----------------------------------------------------------------------- */
+.payments {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.payments legend {
+  margin-bottom: var(--space-2);
+}
+
+.paymentGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.payment {
+  position: relative;
+  display: flex;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  transition:
+    border-color 180ms var(--ease-soft),
+    background-color 180ms var(--ease-soft);
+}
+
+.payment[data-checked] {
+  border-color: var(--c-gold);
+  background-color: rgb(216 182 132 / 0.06);
+}
+
+.paymentText {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.paymentTitle {
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+.paymentNote {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.promo {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.promoRow {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.promoRow .control {
+  max-width: 18rem;
+  text-transform: uppercase;
+}
+
+.promoRow .control::placeholder {
+  text-transform: none;
+}
+
+.promoRow > :last-child {
+  height: 3rem;
+}
+
+.promoStatus {
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.promoStatus[data-state='ok'] {
+  color: var(--c-gold);
+}
+
+.promoStatus[data-state='bad'] {
+  color: #e08a7e;
+}
+
+.terms {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--fs-small);
+  color: var(--c-text-soft);
+  cursor: pointer;
+}
+
+.terms input {
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0.1rem 0 0;
+  accent-color: var(--c-gold);
+}
+
+.errorSummary {
+  font-size: var(--fs-small);
+  color: #e08a7e;
+}
+
+.errorSummary:empty {
+  display: none;
+}
+
+.submitRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+}
+
+.submitTotal {
+  font-weight: 700;
+}
+
+.submitNote {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+/* --- Смета --------------------------------------------------------------------------------- */
+.summary {
+  position: sticky;
+  top: var(--space-5);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.summary > :first-child,
+.summaryEmpty {
+  overflow: hidden;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  border-bottom: 0;
+  background-color: var(--c-surface);
+}
+
+.summaryPhoto {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  color: rgb(216 182 132 / 0.28);
+}
+
+.summaryPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.summaryBody {
+  margin-top: calc(-1 * var(--space-3));
+  padding: var(--space-5);
+  border: 1px solid var(--c-line-strong);
+  border-top: 0;
+  border-radius: 0 0 var(--radius-panel) var(--radius-panel);
+  background-color: var(--c-surface);
+}
+
+.summaryClass {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.summaryName {
+  margin-top: var(--space-1);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+.summaryName a {
+  border-radius: 0.25rem;
+}
+
+.summaryTrip {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-chip);
+  background-color: var(--c-night);
+  font-size: var(--fs-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.summaryPlace {
+  color: var(--c-text-muted);
+}
+
+.summaryRows {
+  margin-top: var(--space-3);
+}
+
+.priceRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: 0.5rem;
+  border-bottom: 1px solid var(--c-line);
+  font-size: var(--fs-small);
+}
+
+.priceRow dt {
+  color: var(--c-text-muted);
+}
+
+.priceRow dd {
+  flex: none;
+  font-weight: 500;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.priceRow dd[data-accent] {
+  color: var(--c-gold);
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: var(--space-4);
+  font-size: var(--fs-ui);
+  color: var(--c-text-soft);
+}
+
+.totalAmount {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--c-gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.deposit {
+  margin-top: var(--space-2);
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.deposit strong {
+  color: var(--c-text-soft);
+}
+
+.freeCancel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  font-size: var(--fs-small);
+  color: var(--c-gold);
+}
+
+.summaryEmpty {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border-bottom: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  font-size: var(--fs-ui);
+  color: var(--c-text-muted);
+}
+
+.help {
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-panel);
+}
+
+.helpTitle {
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+.helpText {
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  color: var(--c-text-muted);
+}
+
+.helpPhone {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  border-radius: 0.25rem;
+  font-weight: 600;
+  color: var(--c-gold);
+}
+
+/* --- Блоки под формой ------------------------------------------------------------------- */
+.section {
+  padding-top: var(--section-space);
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.sectionTitle {
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.sectionLead {
+  margin-top: var(--space-2);
+  color: var(--c-text-soft);
+}
+
+.textLink {
+  border-radius: 0.25rem;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-gold);
+}
+
+.includedPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+  gap: var(--space-6);
+  align-items: center;
+  padding: clamp(1.25rem, 2.6vw, 2.25rem);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-panel);
+  background: linear-gradient(120deg, rgb(216 182 132 / 0.08), transparent 50%), var(--c-surface);
+}
+
+.includedList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.includedList li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-card);
+  background-color: var(--c-night);
+  font-size: var(--fs-small);
+  font-weight: 500;
+}
+
+.includedList svg {
+  flex: none;
+  color: var(--c-gold);
+}
+
+.reviews {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.4vw, 1.5rem);
+}
+
+.reviews li {
+  height: 100%;
+}
+
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+}
+
+/* --- После «Отправить заявку» -------------------------------------------------------------
+   Пометка о демо — золотой рамкой, первой на экране */
+.demo {
+  display: flex;
+  gap: var(--space-4);
+  max-width: 44rem;
+  padding: var(--space-5);
+  border: 1px solid color-mix(in srgb, var(--c-gold) 40%, transparent);
+  border-radius: var(--radius-panel);
+  background-color: rgb(216 182 132 / 0.06);
+}
+
+.demoIcon {
+  flex: none;
+  color: var(--c-gold);
+}
+
+.demoTitle {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+.demoText {
+  margin-top: var(--space-2);
+  line-height: 1.6;
+  color: var(--c-text-soft);
+}
+
+.recap {
+  max-width: 44rem;
+  margin-top: var(--space-6);
+}
+
+.recapRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: 0.6rem;
+  border-bottom: 1px solid var(--c-line);
+  font-size: var(--fs-ui);
+}
+
+.recapRow dt {
+  flex: none;
+  color: var(--c-text-muted);
+}
+
+.recapRow dd {
+  font-weight: 500;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.recapRow[data-strong] dd {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--c-gold);
+}
+
+.recapActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+/* --- Адаптив ----------------------------------------------------------------- */
+@media (max-width: 1180px) {
+  .protections {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .protection {
+    grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1023px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .summary {
+    position: static;
+    order: -1;
+  }
+
+  .reviews {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .faq,
+  .includedPanel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .pair,
+  .extras,
+  .paymentGrid,
+  .includedList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dateBody {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .times {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .carCard {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+  }
+
+  .carChange {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .protection {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
