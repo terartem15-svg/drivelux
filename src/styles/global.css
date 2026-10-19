@@ -101,6 +101,13 @@ summary {
   outline-offset: 3px;
 }
 
+/* Пункт, которого в демо нет (SiteLink с адресом 'demo:…'): приглушён и не
+   похож на ссылку, подсказка объясняет почему */
+[data-demo-stub] {
+  cursor: default;
+  opacity: 0.55;
+}
+
 /* Общая колонка контента: поля страницы по краям, не шире 1440px */
 .container {
   width: var(--container);

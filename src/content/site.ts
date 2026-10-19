@@ -10,8 +10,8 @@ import { localized, type Localized } from '@/i18n/lang'
 //    роутер без перезагрузки; с другой страницы '/#faq' откроет главную
 //    сразу на секции;
 //  - '#contacts' — место на текущей странице (подвал есть на всех);
-//  - '#privacy', '#careers' — заглушки будущих страниц: адрес меняется, но
-//    страница остаётся на месте
+//  - 'demo:privacy', 'demo:careers' — пункты, которых в демо нет: выводятся
+//    неактивной подписью с подсказкой, а не ссылкой
 // Адреса страниц сайта (маршруты — в App.tsx)
 export const ROUTES = {
   home: '/',
@@ -58,9 +58,9 @@ export const HEADER_ACTIONS = {
 
 // --- Контакты -------------------------------------------------------------------------
 // Одни и те же в подвале, мобильном меню и карточке «Не нашли ответ?».
-// Ссылки на мессенджеры и соцсети — заглушки-якоря, пока нет настоящих
-// аккаунтов. Телефон и почта — заведомо несуществующие, чтобы звонок или
-// письмо с демо-сайта не ушли реальным людям: московских номеров на 000 нет,
+// Мессенджеры и соцсети — 'demo:'-заглушки: настоящих аккаунтов нет.
+// Телефон и почта — заведомо несуществующие, чтобы звонок или письмо
+// с демо-сайта не ушли реальным людям: московских номеров на 000 нет,
 // а домен .example зарезервирован и никому не выдаётся. Улицы и дома тоже
 // нет: реальный адрес вёл бы к чужому зданию, поэтому вместо него — явная
 // пометка, что пункт выдачи демонстрационный (так же и в places.ts)
@@ -77,16 +77,16 @@ export const CONTACTS = {
     ru: ['Офис — ежедневно 08:00–\u206022:00', 'Поддержка — круглосуточно'],
     en: ['Office — daily 08:00–\u206022:00', 'Support — 24/7'],
   },
-  telegram: '#telegram',
-  whatsapp: '#whatsapp',
+  telegram: 'demo:telegram',
+  whatsapp: 'demo:whatsapp',
 }
 
 // Соцсети в подвале — набор и порядок из референса
 export const SOCIALS = [
-  { id: 'instagram', label: 'Instagram', href: '#instagram' },
+  { id: 'instagram', label: 'Instagram', href: 'demo:instagram' },
   { id: 'telegram', label: 'Telegram', href: CONTACTS.telegram },
-  { id: 'youtube', label: 'YouTube', href: '#youtube' },
-  { id: 'vk', label: 'VK', href: '#vk' },
+  { id: 'youtube', label: 'YouTube', href: 'demo:youtube' },
+  { id: 'vk', label: 'VK', href: 'demo:vk' },
 ] satisfies { id: SocialId; label: string; href: string }[]
 
 // --- Подвал ------------------------------------------------------------------------------
@@ -127,8 +127,8 @@ export const FOOTER = localized(
     companyLinks: [
       { label: 'О компании', href: ROUTES.about },
       { label: 'Корпоративным клиентам', href: '/services/corporate' },
-      { label: 'Вакансии', href: '#careers' },
-      { label: 'Партнёрам', href: '#partners' },
+      { label: 'Вакансии', href: 'demo:careers' },
+      { label: 'Партнёрам', href: 'demo:partners' },
       { label: 'Контакты', href: '#contacts' },
     ],
     contactsTitle: 'Контакты',
@@ -140,12 +140,12 @@ export const FOOTER = localized(
     reviewsLink: 'Читать отзывы',
     paymentTitle: 'Принимаем к оплате',
     legal: [
-      { label: 'Политика конфиденциальности', href: '#privacy' },
+      { label: 'Политика конфиденциальности', href: 'demo:privacy' },
       { label: 'Условия аренды', href: '/#faq' },
-      { label: 'Cookie', href: '#cookies' },
+      { label: 'Cookie', href: 'demo:cookies' },
     ],
     rights: 'Все права защищены.',
-    concept: 'Концепт-сайт для портфолио: машины, цены и контакты вымышленные.',
+    concept: 'Концепт-сайт для портфолио: машины, цены, отзывы, рейтинги и контакты вымышленные.',
     toTop: 'Наверх',
     home: 'DriveLux — на главную',
   },
@@ -180,8 +180,8 @@ export const FOOTER = localized(
     companyLinks: [
       { label: 'About us', href: ROUTES.about },
       { label: 'Corporate clients', href: '/services/corporate' },
-      { label: 'Careers', href: '#careers' },
-      { label: 'Partners', href: '#partners' },
+      { label: 'Careers', href: 'demo:careers' },
+      { label: 'Partners', href: 'demo:partners' },
       { label: 'Contacts', href: '#contacts' },
     ],
     contactsTitle: 'Contacts',
@@ -193,12 +193,12 @@ export const FOOTER = localized(
     reviewsLink: 'Read reviews',
     paymentTitle: 'We accept',
     legal: [
-      { label: 'Privacy policy', href: '#privacy' },
+      { label: 'Privacy policy', href: 'demo:privacy' },
       { label: 'Rental terms', href: '/#faq' },
-      { label: 'Cookies', href: '#cookies' },
+      { label: 'Cookies', href: 'demo:cookies' },
     ],
     rights: 'All rights reserved.',
-    concept: 'A portfolio concept site: cars, prices and contacts are fictional.',
+    concept: 'A portfolio concept site: cars, prices, reviews, ratings and contacts are fictional.',
     toTop: 'Back to top',
     home: 'DriveLux — home',
   },
